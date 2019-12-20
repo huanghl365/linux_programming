@@ -9,15 +9,16 @@
 
 void open_test(void);
 void lseek_test(void);
-void unlink_test(void);
-void stat_fstat_lstat_test(void);
 void perror_test(void);
 void write_test(void);
+
+void unlink_test(void);
+void stat_fstat_lstat_test(void);
 void chmod_chown_test(void);
 
 void fopen_test(void);
 void fseek_test(void);
-void fgets_test(void);
+void fgets_test(void); //the serial of get and put string test
 void feof_ferror_test(void);
 void scanf_test(void);
 
