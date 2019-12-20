@@ -17,7 +17,7 @@ int main()
 	tmptr = localtime(&timeval);
 	printf("%d-%d-%d  %d-%d-%d\n", tmptr->tm_year%100+2000,tmptr->tm_mon+1, tmptr->tm_mday, tmptr->tm_hour,tmptr->tm_min, tmptr->tm_sec);
 	
+	strftime(buf, 256, "%Y-%m-%d %A %H:%M:%S", tmpstr);
+    printf("%s\n", buf);
 	return 0;
 }
-
-

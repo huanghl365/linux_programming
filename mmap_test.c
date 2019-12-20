@@ -69,8 +69,6 @@ int main(void)
 	}
 	fclose(fp);
 	
-	
-	
 	fd = open("/home/mxc/testfile.dat", O_RDWR);
 	
 	//使用mmap建立一段共享内存，这里通过文件描述符建立对打开的文件到内存的映射
