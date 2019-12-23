@@ -26,7 +26,7 @@ void getline_test(void);
 
 int main()
 {
-	getline_test();
+	fopen_test();
 	return 0;
 }
 
@@ -281,20 +281,21 @@ void fseek_test(void)
 	fclose(fp1);
 }
 
-#define READ_SIZE  1024
+#define READ_NUM  1024
 void fopen_test(void)
 {
 	FILE *fp1, *fp2;  //指针前面一定加上*
-	char read_buffer[READ_SIZE] = "\0";
+	char read_buffer[READ_NUM] = "\0";
 	int read_cnt , write_cnt;
-	fp1 = fopen("/home/mxc/testfile", "a+");  //更新方式打开，接续写
-	//fp1 = fopen("/home/mxc/testfile", "w+");  //更新方式打开，长度截短为0
-	fp2 = fopen("/home/mxc/testfile2", "r");   //读方式打开
+	fp1 = fopen("./time_operation.c", "a+");  //更新方式打开，接续写
+	//fp1 = fopen("./time_operation.c", "w+");  //更新方式打开，长度截短为0
+	fp2 = fopen("./time_operation.c", "r");   //读方式打开
 	
 	
 	if (fp1 != NULL && fp2 != NULL)
 	{
-		read_cnt = fread(read_buffer, 1, READ_SIZE, fp2);
+		
+		read_cnt = fread(read_buffer, 1, READ_NUM, fp2);
 		printf("readcnt = %d\n",read_cnt);
 		write_cnt = fwrite(read_buffer, 1, strlen(read_buffer), fp1);
 		fflush(fp1);  //将文件流中未写出的数据立即写出
