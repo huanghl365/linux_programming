@@ -19,7 +19,7 @@ void chmod_chown_test(void);
 void fopen_test(void);
 void fdopen_test(void);
 void fseek_test(void);
-void fgets_test(void); //the serial of get and put string test
+void fgets_gets_test(void);
 void feof_ferror_test(void);
 void scanf_test(void);
 void getline_test(void);
@@ -179,9 +179,8 @@ void scanf_test(void)
 	printf("%lf\n",num2);
 	
 	
-	//scanf("%c %c %c", &ch, &ch1, &ch2);  //第一个字符可以是空格，第二个开始不能是空格，因为空格被作为分隔符
+	scanf("%c %c %c", &ch, &ch1, &ch2);  //第一个字符可以是空格，第二个开始不能是空格，因为空格被作为分隔符
 	//scanf("%c%c%c", &ch, &ch1, &ch2); 	   //每个字符都能是空格
-	
 	//scanf函数并不够灵活并且有漏铜，可以使用fread和fgets，读取输入后对字符串进行分解
 	printf("ch=%c\n",ch);
 	printf("ch1=%c\n",ch1);
@@ -224,32 +223,12 @@ void feof_ferror_test(void)
 	fclose(fp1);
 }
 
-void fgets_test(void)
+void fgets_gets_test(void)
 {
 	FILE *fp1;  //指针前面一定加上*
 	char ch,ch2;
 	char read_buffer[READ_SIZE] = "\0";
 	fp1 = fopen("/home/mxc/testfile", "r+");  //更新方式打开，读写
-	
-	//getc\fgetc\getchar返回读取到的字符，字符为int类型
-	//fgetc和getc到达文件尾或读取出错时，返回EOF
-	ch = (char)getc(fp1);
-	ch2 = (char)fgetc(fp1);
-	printf("ch = %c\n", ch);
-	printf("ch2 = %c\n", ch2);
-	
-	ch = (char)getc(stdin);
-	ch2 = (char)fgetc(stdin);
-	printf("ch = %c  %d\n", ch, ch);
-	printf("ch2 = %c  %d\n", ch2, ch2);
-	getchar();
-	
-	//putc\fputc\putchar返回值为写入的字符，字符为int类型
-	//putc\fputc\putchar写入失败返回EOF
-	putc((int)'Y', fp1);
-	fputc((int)'E', fp1);
-	putchar((int)'S');
-	
 	
 	//fgets遇到三种情况读取结束：读取到n-1个字符；读取到换行符（保留换行符）；读到文件尾。fgets会给读取的字符串添加'\0'。
 	//fgets返回一个指向读取字符串的指针;当读取到文件尾EOF时，返回空指针；出错时，返回空指针并设置errno
@@ -259,7 +238,6 @@ void fgets_test(void)
 		printf("%s", read_buffer);
 		memset(read_buffer, 0, READ_SIZE);
 	}
-	
 	
 	//gets读取到换行符停止读取（丢弃换行符）。gets会给读取的字符串添加'\0'。
 	//gets返回一个指向读取字符串的指针;读取出错返回空指针
