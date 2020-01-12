@@ -39,7 +39,10 @@ void printdir_test(char* dirpath, int depth)
 	{
 		printf("open dir failed\n");
 	}
-	//因为有可能有子目录，遍历子目录时，传递的目录路径不是绝对路径，因此在遍历子目录之前要先切换到当前路径，否则打不开目录
+	//opendir要想打开目录，对目录路径是有要求的，有两种方式指定目录路径：1、传递绝对路径        
+	//2、不使用绝对路径，但要先切换到子目录所在的父目录，再打开子目录
+	
+	//因为有可能有子目录，遍历子目录时，传递的目录路径不是绝对路径，因此在遍历子目录之前要先切换到当前路径
 	chdir(dirpath);	
 	while ((entry = readdir(pdir)) != NULL)
 	{
@@ -49,7 +52,7 @@ void printdir_test(char* dirpath, int depth)
 			if (strcmp(".", entry->d_name) && strcmp("..", entry->d_name)) 
 			{
 				printf("%*s%s/\n", depth, "", entry->d_name);
-				printdir(entry->d_name, depth + 4);  //遍历子目录
+				printdir_test(entry->d_name, depth + 4);  //遍历子目录
 			}
 		
 		}
@@ -90,7 +93,7 @@ int mkdir_test(void)
 	}
 	
 	//在目录中创建文件
-	fd = open("testfile", O_CREAT|O_TRUNC|O_EXCL, S_IRUSR | S_IWUSR | S_IXUSR);
+	fd = open("testfile", O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IXUSR);
 	
 	//删除空目录
 	rmdir("/home/mxc/testdir1");

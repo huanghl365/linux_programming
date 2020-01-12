@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#if 0
 int main(int argc, char *argv[])
 {
 
@@ -17,17 +18,19 @@ int main(int argc, char *argv[])
 	//令，创建一个子进程，命令执行后主函数会继续运行不会退出。
 	system("ps -l &");
 	printf("done");
-#endif 
-
-#if 0
+#else
 	//可以使用excel将当前进程替换为另一个进程，并且当新的进程执行后会退出当前进程，因此不会看到printf打印
 	execl("/bin/ps", "ps", "-l", NULL);
 	printf("done");
 #endif
+}
 
+#else
+int main(int argc, char *argv[])
+{
 
-	//编译出toupper.out,用来将小写字母翻译成大写
-#if 0
+	//1、编译出toupper.out,用来将小写字母翻译成大写
+#if 0 
 	int ch;
 	while ((ch = getchar()) != EOF)
 	{
@@ -35,7 +38,7 @@ int main(int argc, char *argv[])
 	}
 #endif 
 
-	
+	//2、将文件流重定向到标准输入，使用execl调用toupper.out
 #if 1
 	FILE *fptr = NULL;
 	if (argc != 2)
@@ -60,5 +63,7 @@ int main(int argc, char *argv[])
 #endif 
 
 	return 0;
+
 }
+#endif
 

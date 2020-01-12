@@ -16,6 +16,28 @@ typedef struct record
 	char str[STR_LEN];
 }RECORD;
 
+
+/*
+void *mmap(void *addr, size_t length, int prot, int flags,int fd, off_t offset);
+描述：mmap将一个文件或者其它对象映射进内存。文件被映射到多个页上，如果文件的大小不是所有页的大
+小之和，最后一个页不被使用的空间将会清零。
+参数：
+addr：映射区的开始地址，设置为0时表示由系统决定映射区的起始地址。
+length：映射区的长度，长度单位是 以字节为单位，不足一内存页按一内存页处理。
+prot：期望的内存保护标志，不能与文件的打开模式冲突。是以下的某个值，可以通过or运算合理地组合在一起
+PROT_EXEC  页内容可以被执行
+PROT_READ  页内容可以被读取
+PROT_WRITE 页可以被写入
+PROT_NONE  页不可访问
+flags：指定映射对象的类型，映射选项和映射页是否可以共享。它的值可以是一个或者多个标志的组合体，这里只列举两个常用的
+MAP_SHARED  与其它所有映射这个对象的进程共享映射空间。对共享区的写入，相当于输出到文件。直到msync()或者munmap()被调用，文件实际上不会被更新。
+MAP_PRIVATE 建立一个写入时拷贝的私有映射。内存区域的写入不会影响到原文件。这个标志和以上标志是互斥的，只能使用其中一个。
+fd：有效的文件描述符。一般是由open()函数返回，其值也可以设置为-1，此时需要指定flags参数中的MAP_ANON,表明进行的是匿名映射。
+off_toffset：被映射对象内容的起点。
+返回值：
+成功执行时，mmap()返回被映射区的指针，munmap()返回0。失败时，mmap()返回MAP_FAILED[其值为(void *)-1]，munmap返回-1。
+
+*/
 int main(void)
 {
 	
@@ -72,16 +94,9 @@ int main(void)
 	fd = open("/home/mxc/testfile.dat", O_RDWR);
 	
 	//使用mmap建立一段共享内存，这里通过文件描述符建立对打开的文件到内存的映射
-	//参数1：:0表示内存地址随机分配
-	//参数2：共享内存的大小
-	//参数3：表示内存段可读可写
-	//参数4：MAP_SHARED表示把对共享内存的修改保存到磁盘文件
-	//MAP_PRIVATE表示对内存段的修改只在本进程修改，修改不会保存到磁盘文件或者打开的文件中
-	//参数5：文件描述符
-	//参数:6：0表示经共享内存访问的文件中数据的起始偏移值为0
 	//pmmap = (RECORD *)mmap(0, RECORD_NUM * sizeof(RECORD), PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
 	pmmap = (RECORD *)mmap(0, RECORD_NUM * sizeof(RECORD), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if (pmmap != NULL)
+	if (pmmap != MAP_FAILED) //MAP_FAILED : (void *) -1
 	{
 		pmmap[42].num = 100 + 42;
 		sprintf(pmmap[42].str, "THIS IS RECORD STRING %d\n", 100 + 42);
@@ -93,8 +108,7 @@ int main(void)
 		perror("mmap");
 	}
 	
-	//把内存段的某个部分或者整段修改写回到被映射的文件中
-	//好像不用这个调用也没什么影响，修改后就会自动写到打开的文件中
+	//把内存段的某个部分或者整段修改写回到被映射的文件
 	msync((void*)pmmap, RECORD_NUM * sizeof(RECORD), MS_ASYNC);
 	
 	lseek(fd, 42 * sizeof(record_tmp), SEEK_SET);
