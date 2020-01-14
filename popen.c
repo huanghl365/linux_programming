@@ -11,6 +11,10 @@ popen的返回值是个标准I/O流，并且这个流是单向的，须由pclose
 popen返回的I/O流的方向由参数type确定，type参数只能是w（写）和r（读）中的一个，如果 type 是 "r" 则fopen返回的文件指针
 连接到 command 的标准输出；如果 type 是 "w" 则文件指针连接到 command 的标准输入。
 */
+
+/*
+程序功能：简单测试popen调用，读取命令的执行输出
+*/
 int main()
 {
     FILE *read_fp = NULL;

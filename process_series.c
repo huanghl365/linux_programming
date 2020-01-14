@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
+
+
 #if 0
 int main(int argc, char *argv[])
 {
@@ -19,7 +22,7 @@ int main(int argc, char *argv[])
 	system("ps -l &");
 	printf("done");
 #else
-	//可以使用excel将当前进程替换为另一个进程，并且当新的进程执行后会退出当前进程，因此不会看到printf打印
+	//excel将当前进程替换为另一个进程，并且当新的进程执行后会退出当前进程，因此不会看到printf打印
 	execl("/bin/ps", "ps", "-l", NULL);
 	printf("done");
 #endif
@@ -27,6 +30,12 @@ int main(int argc, char *argv[])
 
 #endif
 
+
+
+
+/*
+程序功能描述：使用freopen重定向文件流为标准输入，给execl打开的程序输入数据，将小写字母替换为大写字母
+*/
 #if 1
 int main(int argc, char *argv[])
 {

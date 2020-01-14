@@ -7,12 +7,17 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+程序功能描述：研究fgets 和 gets函数的具体使用及区别
+*/
+
+#define READ_SIZE 128
 int main(void)
 {
 	FILE *fp1;  //指针前面一定加上*
 	char ch,ch2;
 	char read_buffer[READ_SIZE] = "\0";
-	fp1 = fopen("/home/mxc/testfile", "r+");  //更新方式打开，读写
+	fp1 = fopen("test.txt", "r+");  //更新方式打开，读写
 	
 	//fgets遇到三种情况读取结束：读取到n-1个字符；读取到换行符（保留换行符）；读到文件尾。fgets会给读取的字符串添加'\0'。
 	//fgets返回一个指向读取字符串的指针;当读取到文件尾EOF时，返回空指针；出错时，返回空指针并设置errno
@@ -22,16 +27,19 @@ int main(void)
 		printf("%s", read_buffer);
 		memset(read_buffer, 0, READ_SIZE);
 	}
+
+	if (NULL != fgets(read_buffer, READ_SIZE, stdin))
+		printf("%s", read_buffer);
+
 	
 	//gets读取到换行符停止读取（丢弃换行符）。gets会给读取的字符串添加'\0'。
 	//gets返回一个指向读取字符串的指针;读取出错返回空指针
-	//gets对读取字符串长度没有限制，因此最好使用fget替代
+	//gets对读取字符串长度没有限制，因此最好使用fgets替代
 	memset(read_buffer, 0, READ_SIZE);
-	/*if (NULL != gets(read_buffer))
-		printf("%s", read_buffer);*/
-	
-	if (NULL != fgets(read_buffer, READ_SIZE, stdin))
+	if (NULL != gets(read_buffer))
 		printf("%s", read_buffer);
+	
+	
 	
 	fclose(fp1);
 	return 0;

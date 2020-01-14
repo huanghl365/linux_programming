@@ -2,7 +2,9 @@
 #include <unistd.h>
 #include  <stdlib.h>
 
-//测试当前用户对文件的权限
+/*
+程序功能描述：测试access调用，判断文件是否存在及程序对文件的权限
+*/
 int main(int argc, char *argv[])
 {
 	int ret = -1;

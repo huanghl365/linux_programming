@@ -10,7 +10,7 @@ int main(void)
 {
 	int  out;
 	char *pstr = NULL;
-	out = open("/home/mxc/file.out", O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+	out = open("test.txt", O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	if (out < 0)
 	{
 		//根据error打印错误信息，可以自己加上提示字符串

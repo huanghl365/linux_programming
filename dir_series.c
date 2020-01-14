@@ -28,6 +28,9 @@ int main(void)
 	return 0;
 }
 
+/*
+程序功能描述：目录扫描测试
+*/
 void printdir_test(char* dirpath, int depth)
 {
 	DIR *pdir = NULL;
@@ -67,6 +70,10 @@ void printdir_test(char* dirpath, int depth)
 	closedir(pdir); //关闭目录流并释放与之关联的资源
 }
 
+
+/*
+程序功能描述：文件夹创建、切换、删除测试
+*/
 int mkdir_test(void)
 {
 	int fd,ret;

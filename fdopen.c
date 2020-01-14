@@ -19,6 +19,10 @@ mode：文件打开方式，与fopen一样
 返回值：
 转换成功时返回指向该流的文件指针。失败则返回NULL，并把错误代码存在errno中。
 */
+
+/*
+程序功能描述：简单测试fdopen函数，将文件描述符以文件流的方式打开，并使用C库文件流函数操作
+*/
 #define MAX_BUF_SIZE 256
 int main(void)
 {
@@ -26,11 +30,11 @@ int main(void)
 	FILE *streamptr = NULL;
 	char streambuf[MAX_BUF_SIZE] = "\0";
 	char *searchptr = NULL;
-	fd = open("./file_operation.c", O_RDONLY);
+	fd = open("test.txt", O_RDONLY);
 	if (-1 == fd)
 	{
 		perror("open");
-		return ;
+		exit(1);
 	}
 	else
 	{
@@ -39,7 +43,7 @@ int main(void)
 		{
 			perror("fdopen");
 			streamptr = NULL;
-			return ;
+			exit(1);
 		}
 		else
 		{
@@ -54,7 +58,7 @@ int main(void)
 			close(fd);
 			fclose(streamptr);
 		}
-		return ;
+		
 	}
 	return 0;
 }

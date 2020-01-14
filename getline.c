@@ -18,9 +18,13 @@ n：如果是由系统malloc的指针，请填0。
 stream：文件描述符
 返回值：返回读取的字节数，失败返回-1。
 */
+
+/*
+程序功能描述：简单测试getline调用，循环读取文件的每一行知道文件尾并打印出来
+*/
 int main(void)
 {
-	FILE *streamptr = fopen("./dir_operation.c", "r");
+	FILE *streamptr = fopen("test.txt", "r");
 	char *lineptr = NULL;
 	size_t len = 0;
 	if (streamptr == NULL)

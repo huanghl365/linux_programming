@@ -36,14 +36,17 @@ fd：有效的文件描述符。一般是由open()函数返回，其值也可以
 off_toffset：被映射对象内容的起点。
 返回值：
 成功执行时，mmap()返回被映射区的指针，munmap()返回0。失败时，mmap()返回MAP_FAILED[其值为(void *)-1]，munmap返回-1。
+*/
 
+/*
+程序功能描述：测试mmap系统调用，打开一个文件建立内存映射，以结构体数组的方式进行读写操作（比read write直接操作文件方便得多），并将修改的结果保存到文件中
 */
 int main(void)
 {
 	
 	FILE *fp = NULL;
 	int i = 0;
-	int fd;
+	int fd = -1;
 	int nread = 0;
 	RECORD record_tmp = {0, "\0"};
 	RECORD *pmmap = NULL;
@@ -92,6 +95,10 @@ int main(void)
 	fclose(fp);
 	
 	fd = open("/home/mxc/testfile.dat", O_RDWR);
+	if (-1 == fd)
+	{
+		perror("open");
+	}
 	
 	//使用mmap建立一段共享内存，这里通过文件描述符建立对打开的文件到内存的映射
 	//pmmap = (RECORD *)mmap(0, RECORD_NUM * sizeof(RECORD), PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);

@@ -6,6 +6,10 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <time.h>
+
+/*
+程序功能描述：对比测试时间相关的系统调用
+*/
 int main()
 {
 

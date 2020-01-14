@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 
+
+/*
+程序功能描述：对比测试stat、fstat、lstat调用，获取文件的各种文件属性
+*/
 int main(int argc, char *argv[])
 {
 	struct stat statbuf;

@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+程序功能描述：测试scanf的格式化输入进行测试
+*/
 int main(void)
 {
 	char ch = '\0';

@@ -9,6 +9,10 @@
 
 #define READ_SIZE  1024
 #define WRITE_SIZE  1024
+
+/*
+程序功能说明：测试fseek的使用
+*/
 int main(void)
 {
 	FILE *fp1;  //指针前面一定加上*
@@ -17,8 +21,8 @@ int main(void)
 	long int filesize = 0;
 	//如果是r+,则读写都可以通过fseek定位到任意位置
 	//如果是a+,则读可以通过fseek定位到任意位置，但是写只能接续写，无法通过fseek进行定位
-	//fp1 = fopen("/home/mxc/testfile2", "r+");  //更新方式打开，读写
-	fp1 = fopen("/home/mxc/testfile2", "a+");  //更新方式打开，接续写
+	//fp1 = fopen("test.txt", "r+");    //更新方式打开，读写
+	fp1 = fopen("test.txt", "a+");  	//更新方式打开，接续写
 	
 	fseek(fp1, 10L, SEEK_SET);
 	

@@ -14,7 +14,7 @@ int main(void)
 	char ch,ch2;
 	char read_buffer[READ_SIZE] = "\0";
 	int ret =0 ;
-	fp1 = fopen("/home/mxc/testfile", "r+");  //更新方式打开，读写
+	fp1 = fopen("test.txt", "r+");  //更新方式打开，读写
 
 
 	while(NULL != fgets(read_buffer, READ_SIZE, fp1))  

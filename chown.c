@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+程序功能描述：简单测试chown调用，修改文件属主
+*/
 int main(int argc, char *argv[])
 {
 	struct stat statbuf;
@@ -35,7 +38,7 @@ int main(int argc, char *argv[])
 	
 	//如果要修改文件的属主，那么进程需要有超级用户的权限
 	//1000 是 mxc的用户ID和组ID
-	ret = chown("/home/mxc/file", 1000, 1000); 
+	ret = chown("/home/mxc/test.txt", 1000, 1000); 
 	if (-1 == ret)
 	{
 		perror("chown");

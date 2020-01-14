@@ -29,6 +29,10 @@ mode ：指定创建文件的权限， S_IRUSR 表示读 S_IWUSR 表示写，S_I
 
 */
 
+
+/*
+程序功能描述：测试open调用 各种flags的使用效果
+*/
 #if 0
 int main(void)
 {
@@ -36,7 +40,7 @@ int main(void)
 	int in, out;
 	int nread = 0;
 	//只读方式打开文件
-	in = open("/home/mxc/testfile", O_RDONLY);
+	in = open("/home/mxc/test.txt", O_RDONLY);
 
 	//创建文件，文件存在不创建，默认不清空文件也不接续文件，从头开始写文件
 	//out = open("/home/mxc/file.out", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
@@ -81,7 +85,7 @@ int main(int argc, char *argv[])
 	 
 	//创建文件，文件存在则不创建，不阻塞，写入数据立即同步到磁盘文件
 	//可以一边写数据，一边用cat命令查看磁盘文件
-	out = open("/home/mxc/file", O_WRONLY | O_CREAT | O_SYNC |O_NONBLOCK); 		  
+	out = open("test.txt", O_WRONLY | O_CREAT | O_SYNC |O_NONBLOCK); 		  
 	if (out < 0)
 	{
 		perror("open");

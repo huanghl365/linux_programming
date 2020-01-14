@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 
+
+/*
+程序功能描述：简单测试chmod调用，修改文件权限
+*/
 int main(int argc, char *argv[])
 {
 	struct stat statbuf;

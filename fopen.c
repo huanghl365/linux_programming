@@ -6,16 +6,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 #define READ_NUM  1024
+
+/*
+程序功能说明：简单测试fopen函数的文件打开方式
+*/
 int main(void)
 {
 	FILE *fp1, *fp2;  //指针前面一定加上*
 	char read_buffer[READ_NUM] = "\0";
 	int read_cnt , write_cnt;
-	fp1 = fopen("./time_operation.c", "a+");  //更新方式打开，接续写
+	fp1 = fopen("test1.txt", "a+");   			 //更新方式打开，接续写
 	//fp1 = fopen("./time_operation.c", "w+");  //更新方式打开，长度截短为0
-	fp2 = fopen("./time_operation.c", "r");   //读方式打开
+	fp2 = fopen("test2.txt", "r");   			//读方式打开
 	
 	
 	if (fp1 != NULL && fp2 != NULL)
