@@ -25,7 +25,9 @@ int main(int argc, char *argv[])
 #endif
 }
 
-#else
+#endif
+
+#if 1
 int main(int argc, char *argv[])
 {
 
