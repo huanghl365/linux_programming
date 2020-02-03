@@ -9,7 +9,7 @@
 #define READ_NUM  1024
 
 /*
-程序功能说明：简单测试fopen函数的文件打开方式
+程序功能说明：简单测试fopen函数
 */
 int main(void)
 {

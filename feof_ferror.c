@@ -8,6 +8,11 @@
 #include <string.h>
 
 #define READ_SIZE 1024
+
+
+/*
+程序功能描述：测试feof和ferror的使用
+*/
 int main(void)
 {
 	FILE *fp1;  //指针前面一定加上*
