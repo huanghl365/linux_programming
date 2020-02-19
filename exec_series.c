@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	{
 		sleep(1);							   //因为下面的waitpid使用非阻塞，因此这里要适当延时，才能顺利回收子进程
 		ret = waitpid(pid, &status, WNOHANG);  //使用waitpid回收指定进程，WNOHANG表示非阻塞
-		//ret = waitpid(2233, &status, WNOHANG);
+		//ret = waitpid(22  33, &status, WNOHANG);
 
 		if (-1 != ret)
 		{

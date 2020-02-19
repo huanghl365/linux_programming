@@ -33,9 +33,9 @@ handler：指定信号的处理方式，有下面三种：
 */
 
 /*
-程序功能描述：测试signal调用的使用（信号的默认处理、捕捉、忽略）
+程序功能描述：signal调用的使用（信号的默认处理、捕捉、忽略）
 */
-#if 1
+#if 0
 void func(int sig);
 
 int main(void)
@@ -141,7 +141,7 @@ void func(int sig)
 #endif //kill -HUP 79396
 
 /*
-程序功能描述：测试使用alarm发送  SIGALRM信号并捕捉处理
+程序功能描述：使用alarm发送  SIGALRM信号并捕捉处理
 */
 
 /*
@@ -217,16 +217,17 @@ int main(void)
 
 参数：
 pid：指定要发送信号的进程PID
-sig：指定要发送的信号
+sig：指定要发送的信号。如果sig为0，则不发送信号，但仍执行错误检查，
+这可用于检查是否存在pid对应的进程或进程组。
 
 返回值：
-调用失败返回-1，失败的原因可能有以下几种：
+调用成功返回0，失败返回-1，失败的原因可能有以下几种：
 	EINVAL 给定的信号无效
 	EPERM 进程权限不够
 	ESRCH 目标进程不存在
 */
 
-#if 0
+#if 1
 void func(int sig)
 {
 	if (sig == SIGALRM)
@@ -256,10 +257,22 @@ int main(void)
 	int status;
 	pid = fork();
 
-#if 0   //测试使用kill 发送SIGALRM
-	if (0 == pid)
+#if 1   
+	if (0 == pid) //测试使用kill 发送SIGALRM
 	{
-		sleep(5);
+		sleep(2);
+
+		ret2 = kill(getppid(), 0); //kill 的sig等于0，不发送信号，可以检查进程是否存在
+		if (0 == ret2)
+		{
+			printf("the process %d is exist\n", getppid());
+		}
+		else
+		{
+			perror("kill");
+		}
+		
+		sleep(2);
 		ret2 = kill(getppid(), SIGALRM); //给父进程发送SIGALRM信号
 		if (-1 == ret2)
 		{
@@ -267,6 +280,7 @@ int main(void)
 		}
 
 	}
+
 
 	if (pid > 0)
 	{
@@ -297,7 +311,7 @@ int main(void)
 	}
 #endif 
 
-#if 1 //测试使用kill 发送SIGKILL
+#if 0 //测试使用kill 发送SIGKILL
 	if (0 == pid)
 	{
 		

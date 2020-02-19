@@ -8,9 +8,6 @@ int main(int argc, char **argv)
 	int i = 0, val = 0;
 
 	printf("RAND_MAX = %d.\n", RAND_MAX);		// 2147483647
-
-	
-	
 	while(1)
 	{
 		//srand使用time函数来播种子产生新的序列，缺陷是如果频率太快超过1HZ，则产生的序列可能会重复
