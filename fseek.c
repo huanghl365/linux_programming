@@ -19,8 +19,13 @@ int main(void)
 	char read_buffer[READ_SIZE] = "\0";
 	char write_buffer[WRITE_SIZE] = "123456789";
 	long int filesize = 0;
-	//fp = fopen("test.txt", "r+");    //更新方式打开，读写
-	fp = fopen("test.txt", "a+");  	//更新方式打开，接续写
+	fp = fopen("test.txt", "r+");    //更新方式打开，读写
+	//fp = fopen("test.txt", "a+");  	//更新方式打开，接续写
+	if (NULL == fp)
+	{
+		perror("fopen");
+		return 1;
+	}
 
 	/*定位读测试*/
 	/*测试结果：r+和a+的效果一样，默认都是从头开始读，并且可以定位到任意位置进行读取*/
@@ -48,7 +53,6 @@ int main(void)
 	如果是r+, 则默认从头开始写，并且可以定位到任意位置写入数据
 	如果是a+，则默认从尾部开始写，并且只能从尾部续写，无法通过fseek进行定位
 	*/
-	//fwrite(write_buffer, 1, strlen(write_buffer), fp);
 	
 	fseek(fp, 2L, SEEK_SET);
 	fwrite(write_buffer, 1, strlen(write_buffer), fp);
@@ -58,6 +62,7 @@ int main(void)
 	
 	
 	fclose(fp);
+	fp = NULL;
 	return 0;
 }
 
