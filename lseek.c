@@ -31,8 +31,8 @@ int main(void)
 
 	//使用echo "string" > file时，不会写入‘\0’,而是写入‘\n’
 	//使用lseek测试文件的大小
-	nread = lseek(fd, 0, SEEK_END);
-	printf("the size of file is %d\n", nread);
+	//nread = lseek(fd, 0, SEEK_END);
+	//printf("the size of file is %d\n", nread);
 
 
 	//文件指针指向哪里，就从哪里开始读取数据，不会去掉指针指向的那个字节

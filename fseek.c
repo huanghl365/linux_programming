@@ -15,28 +15,49 @@
 */
 int main(void)
 {
-	FILE *fp1;  //指针前面一定加上*
+	FILE *fp = NULL;  //指针前面一定加上*
 	char read_buffer[READ_SIZE] = "\0";
-	char write_buffer[WRITE_SIZE] = "FUCK YOUR MOTHER";
+	char write_buffer[WRITE_SIZE] = "123456789";
 	long int filesize = 0;
-	//如果是r+,则读写都可以通过fseek定位到任意位置
-	//如果是a+,则读可以通过fseek定位到任意位置，但是写只能接续写，无法通过fseek进行定位
-	//fp1 = fopen("test.txt", "r+");    //更新方式打开，读写
-	fp1 = fopen("test.txt", "a+");  	//更新方式打开，接续写
+	//fp = fopen("test.txt", "r+");    //更新方式打开，读写
+	fp = fopen("test.txt", "a+");  	//更新方式打开，接续写
+
+	/*定位读测试*/
+	/*测试结果：r+和a+的效果一样，默认都是从头开始读，并且可以定位到任意位置进行读取*/
+	fread(read_buffer, 1, READ_SIZE-1, fp);
+	printf("read the string:%s\n", read_buffer);
+
+	fseek(fp, 2L,  SEEK_SET);
+	memset(read_buffer, 0, sizeof(read_buffer));
+	fread(read_buffer, 1, READ_SIZE-1, fp);
+	printf("read the string:%s\n", read_buffer);
 	
-	fseek(fp1, 10L, SEEK_SET);
+	fseek(fp, -2L, SEEK_END);
+	memset(read_buffer, 0, sizeof(read_buffer));
+	fread(read_buffer, 1, READ_SIZE-1, fp);
+	printf("read the string:%s\n", read_buffer);
+
+	fseek(fp, 0L, SEEK_END);
+	memset(read_buffer, 0, sizeof(read_buffer));
+	fread(read_buffer, 1, READ_SIZE-1, fp);
+	printf("read the string:%s\n", read_buffer);
 	
-	fread(read_buffer, 1, READ_SIZE, fp1);
-	printf("%s\n", read_buffer);
+	/*定位写测试*/
+	/*
+	测试结果：
+	如果是r+, 则默认从头开始写，并且可以定位到任意位置写入数据
+	如果是a+，则默认从尾部开始写，并且只能从尾部续写，无法通过fseek进行定位
+	*/
+	//fwrite(write_buffer, 1, strlen(write_buffer), fp);
 	
-	fseek(fp1, 10L, SEEK_SET);
-	fwrite(write_buffer, 1, strlen(write_buffer), fp1);
+	fseek(fp, 2L, SEEK_SET);
+	fwrite(write_buffer, 1, strlen(write_buffer), fp);
+
+	fseek(fp, -2L, SEEK_END);
+	fwrite(write_buffer, 1, strlen(write_buffer), fp);
 	
-	fseek(fp1, 0L, SEEK_END);
-	filesize = ftell(fp1);		//配合fseek用来计算文件的大小
-	printf("filesize = %ld\n", filesize);
 	
-	fclose(fp1);
+	fclose(fp);
 	return 0;
 }
 
