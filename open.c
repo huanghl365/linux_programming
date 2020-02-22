@@ -26,7 +26,6 @@ mode ：指定创建文件的权限， S_IRUSR 表示读 S_IWUSR 表示写，S_I
 指定的权限还要与linux系统的umask 反值（反值不包括执行权限） 取与
 
 返回值：返回获取的文件描述符，失败返回-1并设置errno
-
 */
 
 
@@ -248,7 +247,7 @@ int main(int argc, char *argv[])
 	while(1)
 	{
 		//测试交替读实验
-		//测试结果：O_APPEND无法实现交替读
+		//测试结果：O_APPEND无法实现交替读，这里也说明O_APPEND只是用来做接续写操作的
 		memset(buf, 0, sizeof(buf));
 		ret = read(fd1, buf, 2);
 		if(-1 != ret)

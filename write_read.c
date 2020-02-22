@@ -32,12 +32,12 @@ count：指定要写入到文件的字节总数
 如果写入的字节数小于指定的字节总数count，并不一定代表错误（可能是因为磁盘空间不够造成）。
 如果写入错误，则返回-1，并设置对应的errno。
 
-注意：写入数据的时候，需要写入多少数据就指定多大的数目，如果指定的count大小超过缓冲区的大小，
+注意：写入数据的时候，需要写入多少数据就指定多大的数目，如果指定的count大小超过数组缓冲区的大小，
 还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的。
 */
 
 /*
-程序功能描述：使用read write操作 标准输入输出的文件描述符
+程序功能描述：使用read和write操作 标准输入输出的文件描述符
 */
 
 #if 0
@@ -59,7 +59,7 @@ int main(void)
 
 
 /*
-程序功能描述：使用write写数据到空文件，并使用lseek定位后使用read读取出来
+程序功能描述：使用write写数据到空文件，lseek定位后使用read读取出来。在程序中分析了越界写入问题。
 */
 #if 1
 int main(void)
@@ -68,7 +68,8 @@ int main(void)
 	int ret = 0;
 	char write_buf[50] = "Append write test";
 	char read_buf[50] = "\0";
-	fd = open("test.txt", O_RDWR | O_CREAT | O_APPEND);
+	//char read_buf[100] = "\0";
+	fd = open("test.txt", O_RDWR | O_CREAT | O_TRUNC);
 	if (-1 == fd)
 	{
 		perror("open");
@@ -77,11 +78,13 @@ int main(void)
 
 	lseek(fd, 0, SEEK_END);
 
-	//使用wirte写数据时，应该使用strlen指定数据大小，不要使用sizeof，因为这样有可能会写入很多空字符
-	//如果指定的范围超过数组的大小，还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的
-	ret = write(fd, write_buf, sizeof(write_buf));
+	//使用wirte写字符数组时，应该使用strlen指定数据大小，不要使用sizeof，因为这样有可能会写入很多空字符
+	//ret = write(fd, write_buf, sizeof(write_buf));
 	//ret = write(fd, write_buf, strlen(write_buf));
-	//ret = write(fd, write_buf, 100);
+
+	
+	//如果指定的数目超过数组的大小，还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的
+	ret = write(fd, write_buf, sizeof(write_buf) * 2); //故意越界
 
 	if (-1 != ret)
 	{
@@ -95,10 +98,9 @@ int main(void)
 	}
 	
 
-	lseek(fd, 0, SEEK_SET);
+	lseek(fd, 0, SEEK_SET); //定位文件位置到开头
+	//如果write故意越界写入，写入两倍数组大小的数据，那么除非read数组大小加倍，否者read读取到数组也会越界导致发生错误
 	ret = read(fd, read_buf, ret);
-	//ret = read(fd, read_buf, 100);
-
 	if (-1 != ret)
 	{
 		printf("ret = %d\n", ret);
