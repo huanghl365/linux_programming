@@ -99,18 +99,10 @@ int main(int argc, char *argv[])
 	{
 		sleep(1);							   //因为下面的waitpid使用非阻塞，因此这里要适当延时，才能顺利回收子进程
 		ret = waitpid(pid, &status, WNOHANG);  //使用waitpid回收指定进程，WNOHANG表示非阻塞
-		//ret = waitpid(22  33, &status, WNOHANG);
+		//ret = waitpid(2233, &status, WNOHANG);
 
 		if (-1 != ret)
 		{
-			/*
-			WIFEXITED(status)：进程正常终止，则取非零值
-			WIFSIGNALED(status)：被未捕获的信号终止，则取非零值
-			WEXITSTATUS(status)：取子进程传给exit或_exit的低8位。一般会先用 WIFEXITED 来判断是否正常结束才能使用此宏
-			
-			注意：如果waitpid指定回收的进程不存在，那么这些宏返回的值跟进程正常终止时是一样的,因此最好是
-			判断waitpid的返回值，确认进程正常回收才对进程的状态做进一步的判断。
-			*/
 			printf("parent:子进程是否正常终止：%d\n", WIFEXITED(status));    
 			printf("parent:子进程是否非正常终止：%d\n", WIFSIGNALED(status));   
 			printf("parent:子进程终止退出码：%d\n", WEXITSTATUS(status)); 
