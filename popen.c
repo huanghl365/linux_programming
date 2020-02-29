@@ -38,8 +38,12 @@ int main()
 	    }
 	    else
 	    {
-		perror("");
-		break;
+			//判断文件操作是否产生错误，有错误返回非零，否则返回0
+			if (ferror(read_fp) != 0)
+			{
+				printf("the file operation have error\n");
+			}
+			break;
 	    }
 	}
 	pclose(read_fp);
