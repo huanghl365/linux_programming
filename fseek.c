@@ -9,6 +9,19 @@
 
 #define READ_SIZE  1024
 #define WRITE_SIZE  1024
+/*
+函数原型：int fseek(FILE *stream, long offset, int whence);
+描述：以whence基准，文件流指针偏移offset（指针偏移量）个字节的位置
+参数：
+stream：文件流指针
+offset：偏移量，正数表示正向偏移，负数表示负向偏移
+whence：设定从文件的哪里开始偏移,可能取值为：SEEK_CUR、SEEK_END、SEEK_SET
+SEEK_SET： 文件开头
+SEEK_CUR： 当前位置
+SEEK_END： 文件结尾
+返回值：
+成功，返回0，失败返回非0值，并设置error的值
+*/
 
 /*
 程序功能说明：测试fseek的使用
