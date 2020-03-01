@@ -10,7 +10,7 @@
 #include <sys/wait.h>
 
 
-#if 0
+#if 1
 /*
 程序功能描述：编译一个hello可执行程序，用于测试exec
 */
@@ -29,6 +29,18 @@ int main(int argc, char *argv[], char *env[])
 		printf("%s\n",env[i]);
 		i++;
 	}
+
+	/*
+	测试execl执行的程序是不是继承了子进程的pid，以及父进程回收的是子进程还是execl执行的程序
+	测试结果：继承了子进程的pid，并且父进程回收的是execl执行的程序
+	*/
+	while(i<5)
+	{
+		printf("hello pid: %d\n", getpid());
+		sleep(1);
+		i++;
+	}
+	
 	return 0;
 	//return 20;
 }
@@ -95,8 +107,9 @@ int main(int argc, char *argv[])
 		
 		//自己定义传递给调用程序的环境变量，不使用从父进程继承的环境变量
 		char *const envp[] = {"AA=aaaa", "XX=bbbb", NULL};
-		execle("/home/mxc/winshare/my_github/linux-programming/helo", "program name:hello", "HELLO", "WORLD", NULL, envp); 
+		execle("/home/mxc/winshare/my_github/linux-programming/hello", "program name:hello", "HELLO", "WORLD", NULL, envp); 
 	#endif
+	
 		exit(0);
 	
 	}
@@ -158,7 +171,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		//已经打开的文件在执行execl之后会保留下来,因此文件流会通过标准输入重定向给toupper.out
+		//已经打开的文件流在执行execl之后会保留下来,因此文件流会通过标准输入重定向给toupper.out
 		execl("./toupper.out", "toupper.out", NULL);
 		printf("done");
 		exit(3);
