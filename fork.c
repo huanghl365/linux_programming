@@ -58,10 +58,16 @@ int main()
 	else
 	{
 		perror("malloc");
+		exit(1);
 	}
 	
 	
 	pid = fork();
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
 	
 	if(pid == 0)
 	{
@@ -91,6 +97,7 @@ int main()
 		printf("子进程globalvar = %d %p\n",globalvar, &globalvar);
 		printf("子进程staticvar = %d %p\n",staticvar, &staticvar);
 #endif
+		exit(0);
 	}
 	
 	if(pid > 0)
@@ -126,13 +133,11 @@ int main()
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
 	}
 		
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-	}
+	
 
 	/*
 	测试子进程有没有复制父进程的代码
@@ -140,7 +145,7 @@ int main()
 	*/
 	printf("进程PID = %d helloworld\n", getpid());
 
-	return 8;
+	return 0;
 }
 #endif
 
@@ -167,6 +172,12 @@ int main()
 	}
 	pid = fork();
 	
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		return -1;
+	}
+	
 	if(pid == 0)
 	{
 		printf("子进程ID为：%d\n", getpid());
@@ -177,6 +188,7 @@ int main()
 		{
 			printf("the readbuf is : %s\n", readbuf);
 		}*/
+		exit(0);
 	}
 	if(pid > 0)
 	{
@@ -193,7 +205,7 @@ int main()
 		
 		pid = waitpid(pid, &status, WNOHANG);  
 
-		if (-1 == pid)
+		if (-1 != pid)
 		{
 			printf("parent:父进程回收的子进程ID：%d\n", pid);
 			printf("parent:子进程是否正常终止：%d\n", WIFEXITED(status));
@@ -203,14 +215,12 @@ int main()
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
 		
 		
 	}
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-	}
+	
 	
 	close(fd);
 	return 0;
@@ -231,6 +241,12 @@ int main()
 	char readbuf1[128] = "\0";
 	pid = fork();
 	
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
+	
 	//测试结果：父子进程确实各自打开同一个文件进行操作，文件指针没有相互关联，实现各自读写
 	if(pid == 0)
 	{
@@ -242,7 +258,7 @@ int main()
 		if(fd1 == -1)
 		{
 			printf("打开文件失败\n");
-			exit(-1);
+			exit(1);
 		}
 		//write(fd1, "WORLD", strlen("WORLD"));
 		ret = read(fd1, readbuf, 5);
@@ -251,6 +267,7 @@ int main()
 			printf("the readbuf is : %s\n", readbuf);
 		}
 		close(fd1);
+		exit(0);
 	}
 	
 	if(pid > 0)
@@ -263,7 +280,7 @@ int main()
 		if(fd2 == -1)
 		{
 			printf("打开文件失败\n");
-			//exit(-1);   //不应该直接退出，最好回收一下子进程
+			//exit(1);   //不应该直接退出，最好回收一下子进程
 		}
 		else
 		{
@@ -274,7 +291,7 @@ int main()
 				printf("the readbuf1 is : %s\n", readbuf1);
 			}
 		}
-		
+		close(fd2);
 		pid = waitpid(pid, &status, WNOHANG);  
 
 		if (-1 != pid)
@@ -287,15 +304,12 @@ int main()
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
+
 		
-		
-		close(fd2);
 	}
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-	}
+	
 	
 	
 	return 0;
@@ -317,6 +331,11 @@ int main()
 	char readbuf1[128] = "\0";
 	int status,ret;
 	pid = fork();
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
 	
 	//测试结果：不同进程的相同文件的文件指针相互关联，能够实现交替写，但是无法实现交替读
 	if(pid == 0)
@@ -329,7 +348,7 @@ int main()
 		if(fd1 == -1)
 		{
 			printf("打开文件失败\n");
-			exit(-1);
+			exit(1);
 		}
 		//write(fd1, "WORLD", strlen("WORLD"));
 		
@@ -340,6 +359,7 @@ int main()
 		}
 		
 		close(fd1);
+		exit(0);
 	}
 	if(pid > 0)
 	{
@@ -351,7 +371,7 @@ int main()
 		if(fd2 == -1)
 		{
 			printf("打开文件失败\n");
-			//exit(-1); //不应该直接退出，最好回收一下子进程
+			//exit(1); //不应该直接退出，最好回收一下子进程
 		}
 		else
 		{
@@ -375,15 +395,13 @@ int main()
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
 		
 		
 		close(fd2);
 	}
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-	}
+	
 	
 	return 0;
 }

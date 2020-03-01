@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
 	else
 		{
 		perror("fstat");
+		exit(1);
 	}
 	
 	printf("\n--------------------------------------------------------------------------\n");

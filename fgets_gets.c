@@ -52,7 +52,7 @@ int main(void)
 	if (NULL == fp1)
 	{
 		perror("fopen");
-		return 1;
+		return -1;
 	}
 	fseek(fp1, 0, SEEK_SET);  
 	while(NULL != fgets(read_buffer, READ_SIZE, fp1))  

@@ -45,6 +45,11 @@ int main(int argc, char *argv[])
 	pid_t ret = -1;
 	int status;		 //获取pid的状态
 	pid = fork();
+	if(pid < 0)
+	{
+		printf("复制进程失败\n");
+		exit(1);
+	}
 	
 	if(pid == 0)
 	{
@@ -92,6 +97,7 @@ int main(int argc, char *argv[])
 		char *const envp[] = {"AA=aaaa", "XX=bbbb", NULL};
 		execle("/home/mxc/winshare/my_github/linux-programming/helo", "program name:hello", "HELLO", "WORLD", NULL, envp); 
 	#endif
+		exit(0);
 	
 	}
 	
@@ -110,14 +116,11 @@ int main(int argc, char *argv[])
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
 	}
-	if(pid < 0)
-	{
-		printf("复制进程失败\n");
-		return -1;
-	}
-	return 8;
+	
+	return 0;
 }
 #endif
 

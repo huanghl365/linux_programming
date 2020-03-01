@@ -78,6 +78,7 @@ int main(void)
 				if (ferror(read_fp) != 0)
 				{
 					printf("the file operation have error\n");
+					exit(1);
 				}
 				break;
 		    }

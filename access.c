@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 	}else
 	{
 		printf("the file not exist\n");
+		exit(1);
 	}
 	return 0;
 	

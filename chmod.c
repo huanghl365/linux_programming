@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 	if (-1 == ret)
 	{
 		perror("chmod");
+		exit(1);
 	}
 	
 	ret = stat(argv[1], &statbuf);

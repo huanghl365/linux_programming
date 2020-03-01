@@ -22,6 +22,7 @@ int main(void)
 		{
 			printf("%s\n",pstr);
 		}
+		exit(1);
 	}	
 	close(out);
 	return 0;

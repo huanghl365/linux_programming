@@ -50,6 +50,7 @@ nmemb:写入单元的数目
 stream：指向文件流指针
 返回值：
 返回写入的单元的数目，当size等于1，则表示写入的字节数目。
+一般用nmemb大小与返回值做比较，如果不相等就是出错。
 
 注意：写入数据的时候，需要写入多少数据就指定多大的数目，如果指定的count大小超过数组缓冲区的大小，
 还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的。
@@ -78,7 +79,7 @@ int main(void)
 		perror("fopen");
 		fp1 = NULL;
 		fp2 = NULL;
-		return 1;
+		return -1;
 	}
 
 	while(1)
@@ -90,7 +91,7 @@ int main(void)
 			if (ferror(fp1) != 0) //判断是不是到达文件尾
 			{
 				perror("fread");
-				return 1;
+				return -1;
 			}				
 			break;
 			
@@ -100,7 +101,7 @@ int main(void)
 		if (write_ret != read_ret)
 		{
 			printf("fwrite failed\n");
-			return 1;
+			return -1;
 		}
 		
 		fflush(fp1);   //将文件流中未写出的数据立即写出，不用加也可以
@@ -131,7 +132,7 @@ int main(void)
 	if (NULL == fp)
 	{
 		perror("fopen");
-		return 1;
+		return -1;
 	}
 
 	//使用fwirte写字符数组时，应该使用strlen指定数据大小，不要使用sizeof，因为这样有可能会写入很多空字符
@@ -148,7 +149,7 @@ int main(void)
 		printf("fwrite failed\n");
 		fclose(fp);
 		fp = NULL;
-		return 1;
+		return -1;
 	}
 	else
 	{
@@ -164,7 +165,7 @@ int main(void)
 		printf("fread failed\n");
 		fclose(fp);
 		fp = NULL;
-		return 1;
+		return -1;
 	}
 	else
 	{

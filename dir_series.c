@@ -85,6 +85,7 @@ int mkdir_test(void)
 	if (ret != 0)
 	{
 		printf("creat dir failed\n");
+		return -1;
 	}
 	mkdir("/home/mxc/testdir1", S_IRUSR | S_IWUSR | S_IXUSR);
 	
@@ -101,11 +102,15 @@ int mkdir_test(void)
 	
 	//在目录中创建文件
 	fd = open("testfile", O_CREAT|O_EXCL, S_IRUSR | S_IWUSR | S_IXUSR);
-	
+	if (fd < 0)
+	{
+		return -1;
+	}
 	//删除空目录
 	rmdir("/home/mxc/testdir1");
 
 	close(fd); 
+	return 0;
 } 
 
 

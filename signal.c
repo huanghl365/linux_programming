@@ -86,6 +86,7 @@ int main(void)
 	if (ret == SIG_ERR)
 	{
 		perror("signal");
+		exit(1);
 	}
 	while(1)
 	{
@@ -187,6 +188,7 @@ int main(void)
 	if (ret == SIG_ERR)
 	{
 		perror("signal");
+		exit(1);
 	}
 	
 	alarm(5);
@@ -200,6 +202,7 @@ int main(void)
 	{
 		perror("pause");
 		printf("signal was caught and the signal-catching function returned\n");
+		exit(1);
 	}
 
 	return 0;
@@ -256,7 +259,12 @@ int main(void)
 	int ret2;
 	int status;
 	pid = fork();
-
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
+	
 #if 1   
 	if (0 == pid) //测试使用kill 发送SIGALRM
 	{
@@ -270,6 +278,7 @@ int main(void)
 		else
 		{
 			perror("kill");
+			exit(1);
 		}
 		
 		sleep(2);
@@ -277,8 +286,9 @@ int main(void)
 		if (-1 == ret2)
 		{
 			perror("kill");
+			exit(1);
 		}
-
+		exit(0);
 	}
 
 
@@ -291,6 +301,7 @@ int main(void)
 		if (ret == SIG_ERR)
 		{
 			perror("signal");
+			exit(1);
 		}
 		
 		pause();  
@@ -307,6 +318,7 @@ int main(void)
 		else
 		{
 			perror("waitpid");
+			exit(1);
 		}
 	}
 #endif 
@@ -320,6 +332,7 @@ int main(void)
 		if (-1 == ret2)
 		{
 			perror("kill");
+			exit(1);
 		}
 
 		/*
@@ -339,6 +352,7 @@ int main(void)
 		if (ret == SIG_ERR)
 		{
 			perror("signal");
+			exit(1);
 		}
 		/*
 		这里加个while，看接收到SIGKILL后父进程是否终止
@@ -353,12 +367,6 @@ int main(void)
 	}
 #endif 
 
-
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-	}
-	
 	return 50;
 }
 #endif
@@ -393,6 +401,7 @@ void mysleep(unsigned int seconds)
 	if (ret == SIG_ERR)
 	{
 		perror("signal");
+		exit(1);
 	}
 	
 	alarm(seconds);

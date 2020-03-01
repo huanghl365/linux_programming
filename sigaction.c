@@ -85,6 +85,7 @@ int main(void)
 	if (-1 == ret)
 	{
 		perror("sigaction");
+		exit(1);
 	}
 	
 	while(1)
@@ -139,6 +140,7 @@ void mysleep(unsigned int seconds)
 	if (-1 == ret)
 	{
 		perror("sigaction");
+		return;
 	}
 	
 	alarm(seconds);
@@ -233,6 +235,7 @@ int main(void)
 	if (-1 == ret)
 	{
 		perror("sigaction");
+		exit(1);
 	}
 
 	printf("waiting a SIGINT to break pause\n");
@@ -256,6 +259,7 @@ int main(void)
     if (-1 == ret)
     	{
  		perror("sigsuspend");
+		exit(1);
     }
 
 	while(1)

@@ -24,12 +24,17 @@ int main(int argc, char *argv[])
 	pid_t ret = -1;
 	int status;
 	pid = fork();
+	if(pid < 0)
+	{
+		printf("复制进程失败\n");
+		return -1;
+	}
 	
 	if(pid == 0)
 	{
 		printf("child:子进程ID：%d\n", getpid());
 		//while(1);
-		exit(256);
+		exit(0);
 	}
 	
 	if(pid > 0)
@@ -71,11 +76,7 @@ int main(int argc, char *argv[])
 		
 	}
 	
-	if(pid < 0)
-	{
-		printf("复制进程失败\n");
-		return -1;
-	}
+	
 	return 50;
 }
 

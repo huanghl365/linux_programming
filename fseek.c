@@ -37,7 +37,7 @@ int main(void)
 	if (NULL == fp)
 	{
 		perror("fopen");
-		return 1;
+		return -1;
 	}
 
 	/*定位读测试*/

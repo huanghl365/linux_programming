@@ -349,6 +349,7 @@ int main()
 	if (0 != ret)
 	{
 		perror("pthread_cancel");
+		exit(1);
 	}
 
 	printf("finish send the cancel request\n");
