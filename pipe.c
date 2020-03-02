@@ -292,9 +292,9 @@ int main(void)
 
 
 /*
-程序功能描述：使用pipe创建管道，并将管道绑定到标准输入，execl调用程序从标准输入读取数据
+程序功能描述：使用pipe创建管道，子进程将管道绑定到标准输入，execl调用程序从标准输入读取数据
 */
-#if 1
+#if 0
 int main(int argc, char *argv[]) 
 {
 #if 0 //编译生成一个hello程序，用于测试从标准输入的描述符读取数据
@@ -312,13 +312,15 @@ int main(int argc, char *argv[])
 	}
 #endif 
 
+#if 1 //编译生成一个hello，用于测试从标准输入流(注意不是标准输入的描述符)读取数据
 	FILE *ptr = NULL;
 	char read_buf[1024] = "\0";
 
-	ptr = fdopen(0, "r");
+	/*ptr = fdopen(0, "r");
 	if (NULL != ptr)
-	{
-		if (NULL != fgets(read_buf, sizeof(read_buf), ptr))
+	{*/
+		if (NULL != fgets(read_buf, sizeof(read_buf), stdin))
+		//if (NULL != fgets(read_buf, sizeof(read_buf), ptr))
 		{
 			printf("get the string: %s\n", read_buf);
 		}
@@ -332,25 +334,28 @@ int main(int argc, char *argv[])
 		}
 		fclose(ptr);
 		ptr = NULL;
-	}
+	/*}
 	else
 	{
 		perror("fdopen");
 		exit(1);
-	}
-
+	}*/
+#endif 
 	return 0;
 	
 }
 #endif
 
-#if 0
+#if 1
 int main(void)
 {
 	int pipe_fd[2];
 	int ret;
 	char write_buf[50] = "\0";
 	int pid, status;
+
+	FILE *ptr =NULL;
+	
 	ret = pipe(pipe_fd); //创建子进程之前先创建管道，父子进程共享管道
 	if (0 != ret)
 	{
@@ -366,20 +371,24 @@ int main(void)
 	
 	if (0 == pid) 
 	{
-		//关闭标准输入文件描述符，将键盘设备与标准输入解绑
-		close(0);
+/*
+管道绑定标准输入测试
+*/
+#if 1  
+		
+		close(0); //关闭标准输入文件描述符，将键盘设备与标准输入解绑
 
-		//复制管道读端描述符，标准输入绑定到新的管道读端描述符
-		dup(pipe_fd[0]);
+		
+		dup(pipe_fd[0]); //复制管道读端描述符，标准输入绑定到新的管道读端描述符
 
-		//不需要从老的管道读端读取数据，因此关闭掉
-		close(pipe_fd[0]);
+		
+		close(pipe_fd[0]); //不需要从老的管道读端读取数据，因此关闭掉
 
-		//不需要往写端写数据，因此也关掉，其实这里必须关掉，否者hexdump内部read不会返回0，就会一直卡在读取数据
-		close(pipe_fd[1]);
+		
+		close(pipe_fd[1]); //不需要往写端写数据，因此也关掉，其实这里必须关掉，否者hexdump内部read不会返回0，就会一直卡在读取数据
 
 
-		//运行一个程序，等待标准输入(新的管道读端) 流出数据
+		//运行一个程序，从标准输入(新的管道读端) 获取数据
 		//ret = execlp("od", "od", "-c", NULL);
 		//ret = execlp("hexdump", "hexdump", NULL);
 		//ret = execlp("cat", "cat", NULL);
@@ -390,16 +399,22 @@ int main(void)
 			exit(1);
 		}
 		exit(0);
+#endif 
+
 	}
 
 	if (pid > 0)
 	{
+/*
+正常操作管道输出端测试
+*/
 #if 0
-		//不需要从管道读端读取数据，因此关闭管道读端
-		close(pipe_fd[0]);
+		close(pipe_fd[0]); //不需要从管道读端读取数据，因此关闭管道读端
 
 		sprintf(write_buf, "%s", "123456789");
 		write(pipe_fd[1], write_buf, strlen(write_buf));
+
+
 
 		/*疑问：必须关闭管道写端，hexdump才会处理数据并退出。
 		原因：这是因为hexdump会不断从标准输入read数据，只有当hexdump内部read返回0的时候才会停止读取，
@@ -409,28 +424,47 @@ int main(void)
 		当然具体还要看程序内部是怎么read，比如cat命令虽然也需要我们关闭写端才会退出，但cat是读取多少输出多少，
 		不需要等待read到0的时候才会处理数据。又比如我们自己写的hello，读多少处理多少并立即退出，不需要我们关闭写端。
 		*/
-
 		close(pipe_fd[1]);
 #endif
-		sleep(1);
-		//关闭标准输出文件描述符，将显示设备与标准输入解绑
-		close(1);
 
-		//复制管道写端描述符，标准输出绑定到新的管道写端描述符
-		dup(pipe_fd[1]);
+/*
+管道写端绑定标准输出测试
+*/
+#if 1
+		sleep(1);	
 
-		//不需要向老的管道写端写数据，因此关闭掉
-		close(pipe_fd[1]);
+		close(1); //关闭标准输出文件描述符，将显示设备与标准输入解绑
 		
-		//不需要从管道读端读取数据，因此关闭掉
-		close(pipe_fd[0]);
+		dup(pipe_fd[1]); //复制管道写端描述符，标准输出绑定到新的管道写端描述符
+
+		close(pipe_fd[1]); //不需要向老的管道写端写数据，因此关闭掉
+		
+	
+		close(pipe_fd[0]);	//不需要从管道读端读取数据，因此关闭掉
 
 		//write(1, "123456789", strlen("123456789"));
-		printf("123456789"); //这里应该不能使用printf向标准输出写数据，因为printf是操作标准输出流，而不是标准输出的描述符
-		
-		//关闭标准输出，这样hexdump才能read到0，才能处理数据并退出
-		close(1);
-	
+
+
+		/*疑问：这里应该不能使用printf向标准输出写数据，因为printf是操作标准输出流，而不是标准输出的描述符，
+		因此如果hello程序直接读取标准输入的描述符，应该是读不到数据的。
+		尝试将在hello程序中使用fdopen打开标准输入流，发现hello还是无法读取数据*/
+			printf("123456789"); 
+
+		/*ptr = fdopen(1, "w");
+		if (NULL == ptr)
+		{
+			perror("fdopen");
+			exit(1);
+		}
+		fprintf(ptr, "123456789");*/
+		fclose(stdout);
+		//close(1); 	//关闭标准输出，这样hexdump才能read到0，才能处理数据并退出
+		/*	while(1)
+		{
+			printf("----\n");
+			sleep(1);
+		}*/
+#endif 
 		
 		pid = waitpid(pid, &status, 0);  //阻塞回收子进程
 		if (-1 != pid)
@@ -449,3 +483,6 @@ int main(void)
 	return 0;
 }
 #endif
+
+
+
