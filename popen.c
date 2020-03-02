@@ -32,24 +32,22 @@ stream：popen返回的文件流指针
 返回由wait4返回的命令的退出状态。如果wait4返回错误或检测到其他错误，则pclose将返回-1，并设置errno。
 */
 
-/*
-程序功能：简单测试popen调用，读取命令的执行输出
-*/
 
 /*
-程序功能描述：编译一个hello可执行程序,用来测试popen读取
+程序功能描述：简单测试popen调用，读取命令的执行输出
 */
 #if 0
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) //编译一个hello可执行程序用来输出数据，用来测试popen读取
 {
 	int i = 0;
-	printf("coming to hello\n");
-	//return 0;
-	return 20;
+	printf("coming to hello: argc=%d\n", argc);
+	
+	return 0;
+	//return 20;
 }
-#endif
+#endif 
 
-#if 1
+#if 0
 int main(void)
 {
     FILE *read_fp = NULL;
@@ -95,14 +93,14 @@ int main(void)
     }
     return 0;
 }
-#endif
+#endif 
 
 
 
 /*
-程序功能：简单测试popen调用，循环从标准输入读取数据，并通过管道写给popen执行的程序
+程序功能：简单测试popen调用，循环从标准输入读取数据，并通过管道写给popen执行的程序处理
 */
-#if  0
+#if 1
 int main(void)
 {
 	FILE *write_fp = NULL;
@@ -111,7 +109,13 @@ int main(void)
 	char write_buf[32] = "\0";
 	while(1)
 	{
-		//测试发现每次只有执行pclose的时候才能将数据写出，因此如果想要做循环处理，则每次都必须重新调用popen打开程序
+		/*疑问：测试发现每次只有执行pclose的时候hexdump才会处理我们写出的数据，
+		因此如果想要做循环处理，则每次都必须重新调用popen打开程序,为什么必须先执行pclose
+		hexdump才会进行处理呢？
+		原因推测：具体可以看pipe中的例子
+		*/
+
+		
 		write_fp = popen("hexdump", "w");  
 		if (NULL == write_fp)
 		{

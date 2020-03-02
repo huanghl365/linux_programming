@@ -7,6 +7,7 @@
 #include <ctype.h>
 
 
+
 /*
 函数原型：int pipe(int pipefd[2]);
 描述：pipe创建一个管道，一个单向数据通道，可用于进程间通信。
@@ -109,7 +110,7 @@ int main(void)
 #endif
 
 /*
-程序功能描述：创建管道，再进行关闭管道测试
+程序功能描述：创建管道，关闭管道写端，观察从管道读端read的现象
 */
 #if 0
 
@@ -198,7 +199,7 @@ int main(void)
 
 
 /*
-程序功能描述：使用pipe创建管道，并与子进程中execl启动的进程进行通信
+程序功能描述：使用pipe创建管道，并通过管道与子进程中execl启动的程序通信
 */
 #if 0
 #if 0  //编译生成pipetest,用于传递管道读端并读取数据
@@ -291,13 +292,160 @@ int main(void)
 
 
 /*
-程序功能描述：使用pipe创建管道，并将管道绑定到标准输入输出
+程序功能描述：使用pipe创建管道，并将管道绑定到标准输入，execl调用程序从标准输入读取数据
 */
+#if 1
+int main(int argc, char *argv[]) 
+{
+#if 0 //编译生成一个hello程序，用于测试从标准输入的描述符读取数据
+	char read_buf[1024] = "\0";
+	int ret; 
+	ret = read(0, read_buf, sizeof(read_buf)-1);
+	if (-1 != ret)
+	{
+		printf("read the string: %s\n", read_buf);
+	}
+	else
+	{
+		perror("read");
+		exit(1);
+	}
+#endif 
+
+	FILE *ptr = NULL;
+	char read_buf[1024] = "\0";
+
+	ptr = fdopen(0, "r");
+	if (NULL != ptr)
+	{
+		if (NULL != fgets(read_buf, sizeof(read_buf), ptr))
+		{
+			printf("get the string: %s\n", read_buf);
+		}
+		else
+		{
+			printf("get string error or get null\n");
+			perror("fgets");
+			fclose(ptr);
+			ptr = NULL;
+			exit(1);
+		}
+		fclose(ptr);
+		ptr = NULL;
+	}
+	else
+	{
+		perror("fdopen");
+		exit(1);
+	}
+
+	return 0;
+	
+}
+#endif
 
 #if 0
 int main(void)
 {
+	int pipe_fd[2];
+	int ret;
+	char write_buf[50] = "\0";
+	int pid, status;
+	ret = pipe(pipe_fd); //创建子进程之前先创建管道，父子进程共享管道
+	if (0 != ret)
+	{
+		perror("pipe");
+		exit(1);
+	}
+	pid = fork();
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
 	
+	if (0 == pid) 
+	{
+		//关闭标准输入文件描述符，将键盘设备与标准输入解绑
+		close(0);
+
+		//复制管道读端描述符，标准输入绑定到新的管道读端描述符
+		dup(pipe_fd[0]);
+
+		//不需要从老的管道读端读取数据，因此关闭掉
+		close(pipe_fd[0]);
+
+		//不需要往写端写数据，因此也关掉，其实这里必须关掉，否者hexdump内部read不会返回0，就会一直卡在读取数据
+		close(pipe_fd[1]);
+
+
+		//运行一个程序，等待标准输入(新的管道读端) 流出数据
+		//ret = execlp("od", "od", "-c", NULL);
+		//ret = execlp("hexdump", "hexdump", NULL);
+		//ret = execlp("cat", "cat", NULL);
+		ret = execl("./hello", "hello", NULL);
+		if (-1 == ret)
+		{
+			perror("execl");
+			exit(1);
+		}
+		exit(0);
+	}
+
+	if (pid > 0)
+	{
+#if 0
+		//不需要从管道读端读取数据，因此关闭管道读端
+		close(pipe_fd[0]);
+
+		sprintf(write_buf, "%s", "123456789");
+		write(pipe_fd[1], write_buf, strlen(write_buf));
+
+		/*疑问：必须关闭管道写端，hexdump才会处理数据并退出。
+		原因：这是因为hexdump会不断从标准输入read数据，只有当hexdump内部read返回0的时候才会停止读取，
+		表示读取到文件尾，这时才会处理数据并退出。前面我们已经知道只有当关闭管道写端的时候read的时候才会
+		返回0，因此便可以解释这里的现象了。
+
+		当然具体还要看程序内部是怎么read，比如cat命令虽然也需要我们关闭写端才会退出，但cat是读取多少输出多少，
+		不需要等待read到0的时候才会处理数据。又比如我们自己写的hello，读多少处理多少并立即退出，不需要我们关闭写端。
+		*/
+
+		close(pipe_fd[1]);
+#endif
+		sleep(1);
+		//关闭标准输出文件描述符，将显示设备与标准输入解绑
+		close(1);
+
+		//复制管道写端描述符，标准输出绑定到新的管道写端描述符
+		dup(pipe_fd[1]);
+
+		//不需要向老的管道写端写数据，因此关闭掉
+		close(pipe_fd[1]);
+		
+		//不需要从管道读端读取数据，因此关闭掉
+		close(pipe_fd[0]);
+
+		//write(1, "123456789", strlen("123456789"));
+		printf("123456789"); //这里应该不能使用printf向标准输出写数据，因为printf是操作标准输出流，而不是标准输出的描述符
+		
+		//关闭标准输出，这样hexdump才能read到0，才能处理数据并退出
+		close(1);
+	
+		
+		pid = waitpid(pid, &status, 0);  //阻塞回收子进程
+		if (-1 != pid)
+		{
+			printf("parent:父进程回收的子进程ID：%d\n", pid);
+			printf("parent:子进程是否正常终止：%d\n", WIFEXITED(status));
+			printf("parent:子进程是否非正常终止：%d\n", WIFSIGNALED(status));   
+			printf("parent:子进程终止退出码：%d\n", WEXITSTATUS(status));
+		}
+		else
+		{
+			perror("waitpid");
+			exit(1);
+		}
+	}
 	return 0;
 }
 #endif
