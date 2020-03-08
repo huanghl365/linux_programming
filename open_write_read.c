@@ -196,7 +196,7 @@ int main(void)
 程序功能描述：将同一个文件打开两次，使用O_APPEND关联文件指针，测试能否实现交替读写
 */
 
-#if 1
+#if 0
 int main(int argc, char *argv[])
 {
 	int fd1 = -1; 
