@@ -201,7 +201,6 @@ int main(void)
 /*
 程序功能描述：使用pipe创建管道，并通过管道与子进程中execl启动的程序通信
 */
-#if 0
 #if 0  //编译生成pipetest,用于传递管道读端并读取数据
 int main(int argc, char *argv[]) 
 {
@@ -233,7 +232,8 @@ int main(int argc, char *argv[])
 	
 	return 0;
 }
-#else
+#endif 
+#if 0
 int main(void)
 {
 	int pipe_fd[2];
@@ -287,7 +287,6 @@ int main(void)
 	
 	return 0;
 }
-#endif 
 #endif 
 
 
@@ -456,6 +455,7 @@ int main(void) //编译生成一个hello，用于测试从标准输入流(注意
 	return 0;
 }
 #endif 
+
 #if 0
 int main(void)
 {
