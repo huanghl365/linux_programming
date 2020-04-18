@@ -142,7 +142,7 @@ int main()
 /*
 程序功能描述：使用信号量做线程同步，主线程从键盘读取字符串，子线程做统计，使用变量判断的方式调试线程捕获互斥锁
 */
-#if 1
+#if 0
 #define READ_SIZE 50
 char sharedbuffer[READ_SIZE] = "\0";
 pthread_mutex_t mutex;

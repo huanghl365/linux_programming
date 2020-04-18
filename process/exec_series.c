@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <sys/wait.h>
 
-
+#if 1
 #if 1
 /*
 程序功能描述：编译一个hello可执行程序，用于测试exec
@@ -136,6 +136,8 @@ int main(int argc, char *argv[])
 	return 0;
 }
 #endif
+#endif 
+
 
 
 /*
