@@ -158,7 +158,7 @@ int main(void)
 	
 	
 	fseek(fp, 0, SEEK_SET); //偏移文件指针到文件头
-	//如果fwrite故意越界写入，写入两倍数组大小的数据，那么除非fread数组大小加倍，否者read读取到数组也会越界导致发生错误
+	//如果fwrite故意越界写入，写入两倍数组大小的数据，那么除非readbuf大小加倍，否者read读取到数组也会越界导致发生错误
 	read_ret = fread(readbuf, 1, write_ret, fp);
 	if (read_ret != write_ret)
 	{
