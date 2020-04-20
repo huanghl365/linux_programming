@@ -15,7 +15,9 @@ pathname:文件的路径名
 
 flags：以指定方式操作文件
 O_CREAT 创建文件，文件存在则不创建，但不报错
-O_RDWR：读写 O_WRONLY：只写 O_RDONLY：只读
+O_RDWR：读写 
+O_WRONLY：只写 
+O_RDONLY：只读
 O_TRUNC  清空文件
 O_APPEND 续写文件
 O_EXCL   如果文件存在则报错
@@ -23,7 +25,8 @@ O_SYNC   同步文件到存储设备
 O_NONBLOCK  在读取不到数据或是写入缓冲区已满会马上return，而不会阻塞等待。
 
 mode ：指定创建文件的权限， S_IRUSR 表示读 S_IWUSR 表示写，S_IXUSR表示执行，
-指定的权限还要与linux系统的umask 反值（反值不包括执行权限） 取与
+创建的文件的权限为mode＆~umask，~mask不包括执行权限。
+
 
 返回值：返回获取的文件描述符，失败返回-1并设置errno
 */
