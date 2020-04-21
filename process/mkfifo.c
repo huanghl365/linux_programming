@@ -292,12 +292,6 @@ int main()
 		perror("mkfifo");
 		exit(1);
 	}
-	else
-	{
-		printf("the process %d has mkfifo the %s\n", getpid(), FIFO_NAME);
-	}
-
-	
 	
 
 	fifo_fd = open(SERVER_FIFO, O_WRONLY);
@@ -306,11 +300,7 @@ int main()
 		perror("open");
 		exit(1);
 	}
-	else
-	{
-		printf("the process %d has open %s\n", getpid(), SERVER_FIFO);
-	}
-
+	
 	
 	while(write_cnt < MSG_SIZE)
 	{
