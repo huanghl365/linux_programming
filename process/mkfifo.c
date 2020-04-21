@@ -263,7 +263,90 @@ int main()
 #endif 
 
 /*
-程序功能描述：
+程序功能描述：编写一个基于FIFO的服务端/客户端程序，客户端向服务端通过命名管道向服务端发送数据，
+服务端处理之后通过命名管道发送给客户端。
 */
+
+//协议结构体
+struct cli_msg
+{
+	int cli_pid; //保存客户端pid
+	char cli_msg_buffer[20];
+};
+
+#define SERVER_FIFO	"server_fifo"
+#define CLIENT_FIFO "client_%d_fifo"
+
+#if 1 //服务端
+int main()
+{
+	int fifo_fd;
+	int ret;
+	int i;
+	int write_cnt =0 ;
+	char write_buffer[BUFFER_SIZE];
+	
+	ret = mkfifo(FIFO_NAME, 777);
+	if (0 != ret)
+	{
+		perror("mkfifo");
+		exit(1);
+	}
+	else
+	{
+		printf("the process %d has mkfifo the %s\n", getpid(), FIFO_NAME);
+	}
+
+	
+	
+
+	fifo_fd = open(SERVER_FIFO, O_WRONLY);
+	if (-1 == fifo_fd)
+	{
+		perror("open");
+		exit(1);
+	}
+	else
+	{
+		printf("the process %d has open %s\n", getpid(), SERVER_FIFO);
+	}
+
+	
+	while(write_cnt < MSG_SIZE)
+	{
+		/*
+		测试：设置不同大小的BUFFER_SIZE大小，观察读写效率
+		读取时间测试方法：time ./xxx
+		测试结果：
+		当读写大小刚好为PIPE_BUF，效率是最高的，读取10MB只用real 0m0.019s
+		当读写大小为PIPE_BUF/16时，效率降低，读取10MB用时real	0m6.349s
+		*/
+		ret = write(fifo_fd, write_buffer, BUFFER_SIZE);
+		if (-1 != ret)
+			write_cnt += ret;
+		else
+		{
+			perror("write");
+			exit(1);
+		}
+		printf("write %d bytes write_cnt = %d\n", ret, write_cnt);
+
+		/*
+		测试：适当延时，观察读端的现象
+		测试结果：当每次写入的数据小于PIPE_BUF时，读端也能立即读取，不用写端写满PIPE_BUF。
+		*/
+		//usleep(500*1000);
+		
+	}
+
+	
+	close(fifo_fd); //当关闭命名管道写端时，读端会read到0
+	printf("the process %d has close fifo_fd\n", getpid());
+	
+	return 0;
+}
+
+
+#endif 
 
 
