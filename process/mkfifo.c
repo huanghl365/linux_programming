@@ -21,10 +21,10 @@ mode:指定创建的命令管道文件的权限，创建的文件的权限为mod
 */
 
 /*
-程序功能描述：观察open阻塞及非阻塞方式调用命名管道的现象
+程序功能描述：观察分析open调用阻塞及非阻塞方式打开命名管道的现象
 */
 #if 0
-#define FIFO_NAME "/home/mxc/nfs/my_fifo"
+#define FIFO_NAME "./my_fifo"
 int main(int argc, char *argv[])
 {
 	int open_flags = 0;
@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
 
 	/*
 	测试：
-	（1）先运行./xxx O_RDONLY 再运行./xxx O_WRONLY 
-	（2）先运行./xxx O_WRONLY 再运行./xxx O_RDONLY 
+	（1）先运行./xxx O_RDONLY，打开另一个终端再运行./xxx O_WRONLY 
+	（2）先运行./xxx O_WRONLY，打开另一个终端再运行./xxx O_RDONLY 
 	（3）直接运行./xxx O_RDONLY O_NONBLOCK
 	（4）直接运行./xxx O_WRONLY O_NONBLOCK
 	（5）直接运行./xxx O_RDONLY O_NONBLOCK，并且读端关闭前运行./xxx O_WRONLY O_NONBLOCK
@@ -96,8 +96,6 @@ int main(int argc, char *argv[])
 		printf("the process %d has open %s\n", getpid(), FIFO_NAME);
 	}
 
-	sleep(5);
-
 	close(fifo_fd);
 	
 	printf("the process %d has close fifo_fd\n", getpid());
@@ -108,7 +106,7 @@ int main(int argc, char *argv[])
 /*
 程序功能描述：测试读写命名管道
 */
-#if 1
+#if 0
 #define FIFO_NAME "/home/mxc/nfs/my_fifo"
 #define BUFFER_SIZE PIPE_BUF/16   //PIPE_BUF为命名管道的buffer大小，默认为4096字节
 //#define BUFFER_SIZE PIPE_BUF
@@ -246,7 +244,7 @@ int main()
 			一开始读端延时5s，此时写端写入65536个字节后才处于阻塞状态。			
 			之后当读端读取累计PIPE_BUF大小数据后，写端才能继续写入。
 
-			疑问：什么一开始写端写入			65536个字节后才处于阻塞状态，为何不是PIPE_BUF就阻塞。
+			疑问：什么一开始写端写入			65536个字节后才处于阻塞状态，为何不是写入PIPE_BUF就阻塞阻塞。
 			*/
 			usleep(500*1000);
 		}
@@ -261,82 +259,4 @@ int main()
 }
 #endif
 #endif 
-
-/*
-程序功能描述：编写一个基于FIFO的服务端/客户端程序，客户端向服务端通过命名管道向服务端发送数据，
-服务端处理之后通过命名管道发送给客户端。
-*/
-
-//协议结构体
-struct cli_msg
-{
-	int cli_pid; //保存客户端pid
-	char cli_msg_buffer[20];
-};
-
-#define SERVER_FIFO	"server_fifo"
-#define CLIENT_FIFO "client_%d_fifo"
-
-#if 1 //服务端
-int main()
-{
-	int fifo_fd;
-	int ret;
-	int i;
-	int write_cnt =0 ;
-	char write_buffer[BUFFER_SIZE];
-	
-	ret = mkfifo(FIFO_NAME, 777);
-	if (0 != ret)
-	{
-		perror("mkfifo");
-		exit(1);
-	}
-	
-
-	fifo_fd = open(SERVER_FIFO, O_WRONLY);
-	if (-1 == fifo_fd)
-	{
-		perror("open");
-		exit(1);
-	}
-	
-	
-	while(write_cnt < MSG_SIZE)
-	{
-		/*
-		测试：设置不同大小的BUFFER_SIZE大小，观察读写效率
-		读取时间测试方法：time ./xxx
-		测试结果：
-		当读写大小刚好为PIPE_BUF，效率是最高的，读取10MB只用real 0m0.019s
-		当读写大小为PIPE_BUF/16时，效率降低，读取10MB用时real	0m6.349s
-		*/
-		ret = write(fifo_fd, write_buffer, BUFFER_SIZE);
-		if (-1 != ret)
-			write_cnt += ret;
-		else
-		{
-			perror("write");
-			exit(1);
-		}
-		printf("write %d bytes write_cnt = %d\n", ret, write_cnt);
-
-		/*
-		测试：适当延时，观察读端的现象
-		测试结果：当每次写入的数据小于PIPE_BUF时，读端也能立即读取，不用写端写满PIPE_BUF。
-		*/
-		//usleep(500*1000);
-		
-	}
-
-	
-	close(fifo_fd); //当关闭命名管道写端时，读端会read到0
-	printf("the process %d has close fifo_fd\n", getpid());
-	
-	return 0;
-}
-
-
-#endif 
-
 
