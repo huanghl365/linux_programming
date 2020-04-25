@@ -8,9 +8,6 @@
 #include <string.h>
 #include <ctype.h>
 
-/*
-程序功能描述：测试system函数的使用，system的内部实现逻辑可以参照 exec_series.c中的例子
-*/
 
 /*
 函数原型：int system(const char *command);
@@ -30,10 +27,13 @@ system需要等待command执行完毕才会返回，如果调用成功，则返�
 退出状态(shell程序的终止状态是它执行的最后一个命令的退出状态status)。
 */
 
+
+
 /*
-程序功能描述：编译一个hello可执行程序,用来测试popen读取
+程序功能描述：测试system函数的使用，system的内部实现逻辑可以参照 exec_series.c中的例子
 */
-#if 0
+
+#if 0 // 编译一个hello可执行程序,用来测试popen读取
 int main(int argc, char *argv[])
 {
 	int i = 0;

@@ -4,10 +4,6 @@
 #include <stdlib.h>
 
 /*
-什么是管道：当一个进程连接数据流到另一个进程时，我们使用术语管道。
-我们通常把一个进程的输出通过管道连接到另一个进程的输入。
-
-
 函数原型：FILE* popen(const char* command,const char* type);
 函数描述：
 popen通过创建管道，fork创建子进程以及调用shell来执行command指定的程序。
@@ -31,8 +27,9 @@ popen的返回值是个标准I/O流，并且这个流是单向的，须由pclose
 stream：popen返回的文件流指针
 返回值：
 返回由wait4返回的命令的退出状态。如果wait4返回错误或检测到其他错误，则pclose将返回-1，并设置errno。
+*/
 
-
+/*
 分析popen与system的异同点：
 相同点：
 （1）都是内部fork创建子进程

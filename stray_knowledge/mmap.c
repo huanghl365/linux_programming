@@ -7,15 +7,6 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-extern int errno;
-#define STR_LEN 30
-#define RECORD_NUM 100
-typedef struct record
-{
-	int num;
-	char str[STR_LEN];
-}RECORD;
-
 
 /*
 void *mmap(void *addr, size_t length, int prot, int flags,int fd, off_t offset);
@@ -41,6 +32,16 @@ off_toffset：被映射对象内容的起点。
 /*
 程序功能描述：测试mmap系统调用，打开一个文件建立内存映射，以结构体数组的方式进行读写操作（比read write直接操作文件方便得多），并将修改的结果保存到文件中
 */
+
+extern int errno;
+#define STR_LEN 30
+#define RECORD_NUM 100
+typedef struct record
+{
+	int num;
+	char str[STR_LEN];
+}RECORD;
+
 int main(void)
 {
 	
