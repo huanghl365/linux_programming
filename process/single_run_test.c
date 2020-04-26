@@ -7,7 +7,6 @@
 #define FILENAME "./single_run.lock"
 void delete_file(void);
 
-
 /*
 程序功能描述：测试一种 实现进程只能单次运行的方法
 */
@@ -39,6 +38,8 @@ int main(void)
 		
 	return 0;
 }
+
+
 
 //删除进程标志文件
 void delete_file(void)
