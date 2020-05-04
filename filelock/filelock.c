@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 /*
-程序功能描述：测试一种实现进程只能单次运行的方法
+程序功能描述：使用文件锁实现进程只能运行一次
 */
 
 #if 0
@@ -59,10 +59,10 @@ void delete_file(void)
 
 
 /*
-程序功能描述：模仿线程互斥锁，编写文件锁
+程序功能描述：使用文件锁实现 资源独占式访问
 */
 
-#if 1
+#if 0
 #define	FILELOCK 	"./file.lock"
 int creat_file_lock(void)
 {
@@ -109,6 +109,8 @@ int main(void)
 	while(1)
 	{
 		creat_file_lock();
+
+		
 		get_lock_cnt++;
 		if (get_lock_cnt > 1000000) get_lock_cnt = 0;
  		printf("pid:%d get_lock_cnt:%d\n", getpid(), get_lock_cnt);
@@ -119,6 +121,8 @@ int main(void)
 		测试结果：其他进程被阻塞，文件锁是能生效的
 		*/
 		sleep(10); 
+
+		
 		remove_file_lock();
 		
 		printf("now unlock!!!\n");
@@ -128,3 +132,4 @@ int main(void)
 }
 
 #endif 
+
