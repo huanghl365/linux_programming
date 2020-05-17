@@ -66,7 +66,7 @@ count：指定要写入到文件的字节总数
 /*
 程序功能描述：测试open调用 O_RDONLY O_WRONLY O_TRUNC O_CREAT O_EXCL 这几个flag的使用
 */
-#if 0
+#if 1
 int main(void)
 {
 	unsigned char ch[1024] = {'\0'};
@@ -193,100 +193,5 @@ int main(void)
 	return 0;
 }
 #endif
-
-
-
-/*
-程序功能描述：使用read和write操作 标准输入输出的文件描述符
-*/
-
-#if 0
-int main(void)
-{
-	int nread = 0;
-	int nwrite = 0;
-	char readbuf[128];
-	//0 表示标准输入的文件描述符   1表示标准输出的文件描述符
-	//stdin 表示标准输入的文件指针	stdout表示标准输出的文件指针
-	nread = read(0, readbuf, sizeof(readbuf));
-	if (nread != -1 )
-	{
-	nwrite = write(1, readbuf, nread);
-	}
-	return 0;
-}
-#endif 
-
-
-/*
-程序功能描述：使用write写数据到空文件，lseek定位后使用read读取出来。在程序中分析了越界写入问题。
-*/
-#if 0
-int main(void)
-{
-	int fd = -1;
-	int ret = 0;
-	char write_buf[50] = "Append write test";
-	char read_buf[50] = "\0";
-	//char read_buf[100] = "\0";
-	fd = open("test.txt", O_RDWR | O_CREAT | O_TRUNC);
-	if (-1 == fd)
-	{
-		perror("open");
-		exit(1);
-	}
-
-	lseek(fd, 0, SEEK_END);
-
-	//使用wirte写字符数组时，应该使用strlen指定数据大小，不要使用sizeof，因为这样有可能会写入很多空字符
-	//ret = write(fd, write_buf, sizeof(write_buf));
-	//ret = write(fd, write_buf, strlen(write_buf));
-
-	
-	//如果指定的数目超过数组的大小，还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的
-	ret = write(fd, write_buf, sizeof(write_buf) * 2); //故意越界
-
-	if (-1 != ret)
-	{
-		printf("ret = %d\n", ret);
-	}
-	else
-	{
-		printf("write failed\n");
-		close(fd);
-		exit(1);
-	}
-	
-
-	lseek(fd, 0, SEEK_SET); //定位文件位置到开头
-	//如果write故意越界写入，写入两倍数组大小的数据，那么除非read数组大小加倍，否者read读取到数组也会越界导致发生错误
-	ret = read(fd, read_buf, ret);
-	if (-1 != ret)
-	{
-		printf("ret = %d\n", ret);
-	}
-	else
-	{
-		printf("read failed\n");
-		close(fd);
-		exit(1);
-	}
-	
-	printf("ret = %d\n",ret);
-	printf("read buf :%s\n", read_buf);
-	
-	close(fd);
-	return 0;
-
-}
-#endif
-
-
-
-
-
-
-
-
 
 

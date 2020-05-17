@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 /*
 return、exit、_exit的主要区别：
 1、exit主要用来终止进程，正常终止一般使用exit(0)，异常终止使用exit(1),只要调用了exit，程序就会退出；
