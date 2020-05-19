@@ -46,14 +46,14 @@ int main(void)
 	
 	if (0 == pid) 
 	{
-		/*子进程向管道写入数据，父进程从管道读取数据*/
+		//子进程向管道写入数据，父进程从管道读取数据
 		sprintf(write_buf, "I am child process, my pid is %d", getpid());
 		write(pipe_fd[1], write_buf, strlen(write_buf));  		
 
 	
 		sleep(1);	//延时1s再读，避免读取了上面写入的数据，导致父进程读取不到卡死
 
-		/*父进程向管道写入数据，子进程从管道读取数据*/
+		//父进程向管道写入数据，子进程从管道读取数据
 		ret = read(pipe_fd[0], read_buf, sizeof(read_buf)-1);   
 		if (ret != -1)
 		{

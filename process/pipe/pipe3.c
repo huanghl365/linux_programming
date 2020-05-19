@@ -68,7 +68,7 @@ int main(void)
 		
 		sprintf(pipe_read_fd_buf, "%d", pipe_fd[0]);
 
-		//执行一个新的程序，因为调用execl，因此子进程
+		//执行一个新的程序，因为调用execl，因此pipetest会继承进程资源比如管道
 		execl("./pipetest","pipetest",pipe_read_fd_buf, NULL); 
 		exit(0);
 	}
