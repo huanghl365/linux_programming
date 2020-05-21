@@ -6,9 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /*
-程序功能描述：运行多个进程，并调用wirte向同一个文件写入数据，分析文件数据有没有错乱以判断write是不是原子操作
+程序功能描述：运行多个进程，并调用wirte向同一个文件续写数据，判断write是不是原子操作
 */
 
 #if 0
