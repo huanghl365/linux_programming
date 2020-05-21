@@ -99,7 +99,7 @@ int main()
 
 
 /*
-程序功能描述：给文件区域等待方式设置共享锁和独占锁
+程序功能描述：给文件区域等待方式和非等待方式设置共享锁和独占锁
 程序名：lock2
 */
 #if 0
@@ -177,7 +177,8 @@ int main()
 	{
 		printf("lock region 2 success");
 	}
-	
+
+	close(file_desc);
 	exit(0);
 }
 #endif
