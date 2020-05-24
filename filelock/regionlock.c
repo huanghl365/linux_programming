@@ -8,7 +8,7 @@
 #include <string.h>
 
 /*
-函数原型：int fcntl(int fd, int cmd, ... arg);
+函数基本原型：int fcntl(int fd, int cmd, ... arg);
 描述：
 fcntl对打开的文件描述符fd执行cmd指定的操作，函数具体原型由cmd决定
 参数：
@@ -31,6 +31,7 @@ F_GETLK	获取打开的文件fd的锁信息
 F_SETLK	对fd指向的文件的某个区域加锁或解锁
 F_SETLKW	与F_SETLK作用一样，不用的是获取不到锁时会一直等待知道获取成功
 
+----------------
 flock_structure:区域锁定结构体，结构体成员如下：
 short l_type
 short l_whence
@@ -48,6 +49,7 @@ l_whence：指定区域起始位置，SEEK_CUR、SEEK_END、SEEK_SET中的一个
 l_start：指定区域的第一个字节
 l_len：指定区域字节数
 l_pid：记录持有锁的进程
+-----------------
 
 返回值：
 F_GETLK和F_SETLK调用成功返回非-1，失败返回-1。
