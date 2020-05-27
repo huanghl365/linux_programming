@@ -209,8 +209,8 @@ int main() {
 		region_to_test.l_whence = SEEK_SET;
 		region_to_test.l_start = start_byte;
 		region_to_test.l_len = SIZE_TO_TRY;
-		//这里要设置l_pid为-1，如果能够设置锁的话，l_pid是不会被刷新的，表示
-		//进程没有被独占，因此我们可以通过判断l_pid是否为-1确定能否设置锁
+		/*这里要设置l_pid为-1，如果能够设置锁的话，l_pid是不会被刷新的，表示
+		进程没有被独占，因此我们可以通过判断l_pid是否为-1确定能否设置锁*/
 		region_to_test.l_pid = -1;	   
 		
 
@@ -223,6 +223,7 @@ int main() {
 			exit(1);
 		}
 
+		//查询的时候，l_type会被刷新，因此也可以查询l_type来判断是否可以加锁
 		if (region_to_test.l_type != F_UNLCK) {
 		//if (region_to_test.l_pid != -1) {
 			printf("Lock would fail. F_GETLK returned:\n");
