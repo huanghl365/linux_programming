@@ -7,18 +7,6 @@
 #include <stdlib.h>
 
 /*
-函数基本原型：int fcntl(int fd, int cmd, ... arg);
-描述：
-fcntl是一个多功能调用。
-fcntl对打开的文件描述符fd执行cmd指定的操作，函数具体原型由cmd决定
-参数：
-fd:文件描述符
-cmd:指定操作
-arg:指定操作的参数
-返回值：
-由cmd操作决定
-
-/*
 int fcntl(int fd, F_GETFL);
 int fcntl(int fd, F_SETFL, ... arg);
 描述：获取及设置文件描述符flags
@@ -27,6 +15,8 @@ fd:文件描述符
 cmd: 
 F_GETFL	获取文件描述符flags，忽略参数arg
 F_SETFL	通过arg参数设置文件描述符flags
+arg:
+文件描述符的flags
 
 返回值：
 F_GETFL	返回文件描述符flags

@@ -127,8 +127,7 @@ int main(void)
 	
 		close(pipe_fd[0]);	//不需要从管道读端读取数据，因此关闭掉
 
-//使用write向管道(标准输出描述符)写数据
-#if 0	
+#if 0	//使用write向管道(标准输出描述符)写数据
 		//write(1, "123456789", strlen("123456789"));
 		//close(1); 	//关闭标准输出，这样hexdump才能read到0，才能处理数据并退出
 #endif
