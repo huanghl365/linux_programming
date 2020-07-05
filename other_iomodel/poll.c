@@ -38,7 +38,7 @@ timeout：指定超时时间，单位为milliseconds 毫秒
 0  表示超时
 
 注意：
-poll就绪返回之后，再次poll时，因为events不会被修改，因此无需再次配置fds
+poll就绪返回之后，再次poll时，因此无需再次对事件进行配置
 */
 
 /*
