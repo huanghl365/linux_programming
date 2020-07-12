@@ -133,7 +133,7 @@ int main(void)
 #endif
 
 
-#if 1	//使用printf向管道(标准输出流)写数据
+#if 0	//使用printf向管道(标准输出流)写数据
 		/*
 		疑问:使用printf 向管道写数据，close 写端后 子进程无法读取
 		原因推测：使用printf写数据的时候，关闭写端应该要使用fclose关闭而不是close，因为数据是向标准输出流写的。
@@ -143,14 +143,16 @@ int main(void)
 			printf("123456789"); 
 			//close(1);
 			fclose(stdout);
-			
+#endif
+
+#if 1	//打开标准输出描述符，使用fprintf向管道(标准输出流)写数据
 		/*
+		测试结果：跟使用printf向管道(标准输出流)写数据效果一样
 		疑问：问什么重新关闭标准输出描述符之后，向标准输出流写数据之前不用重新打开标准输出流
 		原因推测：我们重新绑定设备到标准输出描述符的时候，标准输出流应该是不知道的，它应该只是
 		通过识别标准输出描述符输出到设备而已，因此无需重新打开。
 		*/
 		
-		/*
 		ptr = fdopen(1, "w");
 		if (NULL == ptr)
 		{
@@ -158,7 +160,7 @@ int main(void)
 			exit(1);
 		}
 		fprintf(ptr, "123456789");
-		fclose(stdout);*/
+		fclose(stdout);
 #endif 
 
 
