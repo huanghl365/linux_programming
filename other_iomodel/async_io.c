@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -65,10 +66,9 @@ int main(void)
 		exit(1);
 	}
 
-	
-	
+//正常使用异步IO
+#if 0
 	signal(SIGIO, async_io_func);			// 注册SIGIO信号处理函数
-
 	
 	flag = fcntl(fd, F_GETFL);				
 	//设置O_ASYNC使文件描述符具有信号驱动IO属性，这样文件描述符才会向内核通知IO就绪状态
@@ -76,17 +76,6 @@ int main(void)
 
 	//设定文件描述符的属主，即文件描述符上可执行IO时会接收到通知信号的进程
 	fcntl(fd, F_SETOWN, getpid());  		
-
-/*
-测试：注册SIGIO信号处理函数之前收到SIGIO信号
-测试结果：在注册SIGIO信号处理函数之前收到SIGIO信号，程序会挂掉，因此
-应该先注册SIGIO信号处理函数
-*/
-
-#if 0
-	sleep(10);
-	signal(SIGIO, async_io_func);			// 注册SIGIO信号处理函数
-#endif 
 		
 	while(1)  //阻塞读取键盘数据
 	{
@@ -98,8 +87,36 @@ int main(void)
 		}
 
 	}
+
+#endif
+
+/*
+测试：先配置异步IO，然后在注册SIGIO处理函数之前 发送SIGIO信号
+测试结果：程序会挂掉，应该先注册SIGIO信号处理函数再配置异步IO*/
+
+#if 1
+
 	
-	
+	flag = fcntl(fd, F_GETFL);				
+	fcntl(fd, F_SETFL, flag | O_ASYNC);		
+
+	fcntl(fd, F_SETOWN, getpid());  		
+
+	sleep(10);
+	signal(SIGIO, async_io_func);			
+		
+	while(1)  
+	{
+		memset(buf, 0, sizeof(buf));
+		ret = read(0, buf, sizeof(buf));
+		if(ret > 0)
+		{
+			printf("get data from key board：%s\n", buf);
+		}
+
+	}
+#endif
+	close(fd);
 	return 0;
 }
 

@@ -38,7 +38,7 @@ timeout：指定超时时间，单位为milliseconds 毫秒
 0  表示超时
 
 注意：
-poll就绪返回之后，再次poll时，因此无需再次对事件进行配置
+poll就绪返回之后，再次poll时，无需对描述符的事件再次进行配置
 */
 
 /*
@@ -67,18 +67,18 @@ int main(void)
 	}
 
 	flag = fcntl(0, F_GETFL);		
-		flag |= O_NONBLOCK; 			
-		fcntl(0, F_SETFL, flag);	
+	flag |= O_NONBLOCK; 			
+	fcntl(0, F_SETFL, flag);	
+
+	fds[0].fd = 0;
+	//fds[0].fd = -1;			//标准输入，默认键盘
+	fds[0].events = POLLIN;
+	fds[1].fd = fd; 			//鼠标
+	fds[1].events = POLLIN; 
 
 	while(1)
 	{
-	#if 1	//这里无需重复设置
-		fds[0].fd = 0;
-		//fds[0].fd = -1;			//标准输入，默认键盘
-		fds[0].events = POLLIN;
-		fds[1].fd = fd;				//鼠标
-		fds[1].events = POLLIN; 
-	#endif 
+	
 		ret = poll(fds, fd+1, 10000); //等待10s
 		
 		if(ret == -1)

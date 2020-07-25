@@ -13,6 +13,8 @@
 
 int main(int argc, char *argv[])
 {
+
+
 	int fd1 = -1,fd2 = -1;
 	int ret;
 	char buf[10] = {'0'};
@@ -35,9 +37,9 @@ int main(int argc, char *argv[])
 	fd2 = dup2(fd1, 4); 
 	
 
+//测试：能否实现交替写
+//测试结果：能够实现交替写
 #if 0
-	//测试能否实现交替写
-	//测试结果：能够实现交替写，说明使用dup2可以实现同一文件的不同文件描述符的文件指针关联
 	while(1)
 	{
 		ret = write(fd1, "aa", strlen("aa"));
@@ -66,9 +68,11 @@ int main(int argc, char *argv[])
 		}
 		sleep(1);
 	}
-#else
-	//测试能否实现交替读
-	//测试结果：能够实现交替读，说明使用dup2可以实现同一文件的不同文件描述符的文件指针关联
+#endif
+
+//测试：能否实现交替读
+//测试结果：能够实现交替读
+#if 1
 	while(1)
 	{
 		memset(buf, 0, sizeof(buf));

@@ -26,26 +26,30 @@ struct sigaction
 };
 结构体参数说明：
 	sa_handler：此参数和signal()的参数handler相同，代表新的信号处理函数
+	
 	sa_sigaction：
-	信号处理函数可以采用void (*sa_handler)(int)或void (*sa_sigaction)(int, siginfo_t *, void *)。
-	到底采用哪个要看sa_flags中是否设置了SA_SIGINFO位，如果设置了就采用void (*sa_sigaction)(int, siginfo_t *, void *)，
-	此时可以向处理函数发送附加信息；默认情况下采用void (*sa_handler)(int)，此时只能向处理函数发送信号的数值。
+		信号处理函数可以采用void (*sa_handler)(int)或void (*sa_sigaction)(int, siginfo_t *, void *)。
+		到底采用哪个要看sa_flags中是否设置了SA_SIGINFO位，如果设置了就采用void (*sa_sigaction)(int, siginfo_t *, void *)，
+		此时可以向处理函数发送附加信息；默认情况下采用void (*sa_handler)(int)，此时只能向处理函数发送信号的数值。
+
 	sa_mask：用来设置在处理该信号时暂时将sa_mask 指定的信号集屏蔽
+
 	sa_flags：用来设置信号处理的其他相关操作
-		SA_RESETHAND：当调用信号处理函数时，将信号的处理函数重置为缺省值SIG_DFL
-		SA_RESTART：如果信号中断了进程的某个系统调用，那么信号处理函数执行完成后，系统调用将重启而不是被信号中断
-		SA_NODEFER ：一般情况下， 当信号处理函数运行时，内核将阻塞该给定信号。但是如果设置了 SA_NODEFER标记， 那么在该信号处理函数运行时，内核将不会阻塞该信号
+		SA_RESETHAND：	当调用信号处理函数时，将信号的处理函数重置为缺省值SIG_DFL
+		SA_RESTART：		如果信号中断了进程的某个系统调用，那么信号处理函数执行完成后，系统调用将重启而不是被信号中断
+		SA_NODEFER ：	一般情况下， 当信号处理函数运行时，内核将阻塞该给定信号。但是如果设置了 SA_NODEFER标记， 
+						那么在该信号处理函数运行时，内核将不会阻塞该信号
+
 	sa_restorer：此参数没有使用。    
 	
 oldact：用来备份旧的信号处理方式，一般设置为NULL
 
 返回值：
 成功返回0，失败返回-1。
-
 */
 
 /*
-程序功能描述：测试sigaction调用的使用（信号的默认处理、捕捉、忽略以及sa_flags）
+程序功能描述：测试sigaction调用的使用（信号的默认处理、捕捉、忽略）
 */
 
 typedef void (*sighandler_t)(int);
@@ -58,29 +62,10 @@ int main(void)
 
 	struct sigaction act = {0};
 
-	act.sa_handler = func;
-
-#if 0  //捕捉测试
-	/*
-	测试SA_NODEFER
-	测试结果：sigaction在信号处理函数执行过程中，跟signal调用一样默认是
-	会阻塞发送的信号的，但是如果添加了SA_NODEFER，那么将不会阻塞
-	*/
-	//act.sa_flags = SA_NODEFER; 
-
-	/*
-	测试SA_RESETHAND
-	测试结果：第一次发送ctrl+c，会捕捉并调用信号处理函数，之后信号的处理函数重置为缺省值SIG_DFL，因此在此发送ctrl + c程序中断
-	*/
-	//act.sa_flags = SA_RESETHAND; 
+	act.sa_handler = func;		//捕捉
+	//act.sa_handler = SIG_DFL;	//默认
+	act.sa_handler = SIG_IGN;	//忽略
 	ret = sigaction(SIGINT, &act, NULL);
-#endif
-
-#if 1 //默认处理及忽略测试
-	//act.sa_handler = SIG_DFL;
-	act.sa_handler = SIG_IGN;
-	ret = sigaction(SIGINT, &act, NULL);
-#endif
 
 	if (-1 == ret)
 	{

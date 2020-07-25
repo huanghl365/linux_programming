@@ -55,17 +55,20 @@ int main()
 		printf("the process %d has open %s\n", getpid(), FIFO_NAME);
 	}
 
+/*
+测试：设置不同大小的BUFFER_SIZE大小，观察读写效率
+读取时间测试方法：time ./xxx
+测试结果：
+当读写大小刚好为PIPE_BUF，效率是最高的，读取10MB只用real 0m0.019s
+当读写大小为PIPE_BUF/16时，效率降低，读取10MB用时real	0m6.349s
+*/
+
+#if 1
 	memset(write_buffer, 'A', BUFFER_SIZE);
 	
 	while(write_cnt < MSG_SIZE)
 	{
-		/*
-		测试：设置不同大小的BUFFER_SIZE大小，观察读写效率
-		读取时间测试方法：time ./xxx
-		测试结果：
-		当读写大小刚好为PIPE_BUF，效率是最高的，读取10MB只用real 0m0.019s
-		当读写大小为PIPE_BUF/16时，效率降低，读取10MB用时real	0m6.349s
-		*/
+		
 		ret = write(fifo_fd, write_buffer, BUFFER_SIZE);
 		if (-1 != ret)
 			write_cnt += ret;
@@ -75,15 +78,9 @@ int main()
 			exit(1);
 		}
 		printf("write %d bytes write_cnt = %d\n", ret, write_cnt);
-
-		/*
-		测试：适当延时，观察读端的现象
-		测试结果：当每次写入的数据小于PIPE_BUF时，读端也能立即读取，不用写端写满PIPE_BUF。
-		*/
-		//usleep(500*1000);
-		
+		usleep(200*1000);	
 	}
-
+#endif 
 	
 	close(fifo_fd); //当关闭命名管道写端时，读端会read到0
 	printf("the process %d has close fifo_fd\n", getpid());

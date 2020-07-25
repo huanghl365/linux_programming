@@ -8,7 +8,7 @@
 #include <string.h>
 
 /*
-程序功能描述：给文件区域设置锁，隔一段时间后解锁
+程序功能描述：给文件区域设置独占锁，隔一段时间后解锁
 程序名：lock1
 */
 
@@ -35,11 +35,6 @@ int main()
 		(void)write(file_desc, byte_to_write, 1);
 	}
 
-	//设置共享锁：10-30 byte
-	region_1.l_type = F_RDLCK;
-	region_1.l_whence = SEEK_SET;
-	region_1.l_start = 10;
-	region_1.l_len = 20; 
 
 	//设置独占锁：40-50 byte
 	region_2.l_type = F_WRLCK;
@@ -57,21 +52,6 @@ int main()
 
 
 #if 1
-	sleep(30);
-	//释放共享锁
-	region_1.l_type = F_UNLCK;
-	region_1.l_whence = SEEK_SET;
-	region_1.l_start = 10;
-	region_1.l_len = 20;
-	printf("Process %d, trying F_UNLCK, region %d to %d\n", getpid(),
-		   (int)region_1.l_start, (int)(region_1.l_start + region_1.l_len));
-	res = fcntl(file_desc, F_SETLK, &region_1);
-	if (res == -1) {
-		printf("Process %d - failed to unlock region 1\n", getpid());
-	} else {
-		printf("Process %d - unlocked region 1\n", getpid());
-	}
-
 	sleep(30);
 	//释放独占锁
 	region_2.l_type = F_UNLCK;

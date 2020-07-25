@@ -19,10 +19,10 @@ SEEK_CUR： 当前位置
 SEEK_END： 文件结尾
 返回值：
 返回结果偏移位置，以从文件开头开始的字节数为单位。 发生错误时，将返回值（off_t）-1，并设置errno
-
 */
+
 /*
-程序功能描述：测试leek的使用
+程序功能描述：测试open使用不同方式打开对lseek使用的影响
 */
 int main(void)
 {
@@ -33,16 +33,18 @@ int main(void)
 	int i=0;
 	
 	//使用echo "string" > file时，不会写入‘\0’,而是写入‘\n’
+	
 	//fd = open("test.txt", O_RDWR | O_APPEND);
 	fd = open("test.txt", O_RDWR);
 	if (fd == -1)
 		printf("open error\n");
 
 
-	/*定位读测试*/
-	/*
-	测试结果：加不加O_APPEND效果一样，默认都是从头开始读，并且可以定位到任意位置进行读取
-	*/
+/*
+测试：open分别是否添加O_APPEND，对lseek定位读的影响
+测试结果：加不加O_APPEND效果一样，默认都是从头开始读，并且可以定位到任意位置进行读取
+*/
+
 #if 0
 	nread = read(fd, blk, sizeof(blk)-1);
 	printf("nread = %d read the string: %s\n", nread, blk);
@@ -71,17 +73,20 @@ int main(void)
 	printf("the size of file is %d\n", ret);
 #endif 
 
-	/*定位写测试*/
-	/*
-	测试结果：
-	如果不加O_APPEND, 则默认从头开始写，并且可以定位到任意位置写入数据
-	如果是加了O_APPEND，则默认从尾部开始写，并且只能从尾部续写，无法通过lseek进行定位
-	*/
+
+/*
+测试：open分别是否添加O_APPEND，对lseek定位写的影响
+测试结果：
+如果不加O_APPEND, 则默认从头开始写，并且可以定位到任意位置写入数据
+如果是加了O_APPEND，则默认从尾部开始写，并且只能从尾部续写，无法通过lseek进行定位
+*/
+
+#if 1
 	ret = lseek(fd, 0, SEEK_SET);
 	printf("the offset is %d\n", ret);
 
 	write(fd, write_buf, strlen(write_buf));
-
+#endif
 	close(fd);
 	return 0;
 }

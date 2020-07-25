@@ -11,7 +11,6 @@
 #include "fifo_ser.h"
 
 
-//测试：同时运行多个客户端，shell命令为：for i in 1 2 3 4 5;do  ./fifo_cli.out & done
 int main()
 {
 	int ser_fifo, cli_fifo;

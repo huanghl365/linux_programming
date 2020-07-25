@@ -8,7 +8,7 @@
 #include <string.h>
 
 /*
-程序功能描述：模仿线程互斥锁，编写文件锁
+程序功能描述：使用文件锁实现进程互斥
 */
 
 #if 1
@@ -23,7 +23,8 @@ int creat_file_lock(void)
 		{
 			printf("creat %s failed\n", FILELOCK);
 			fflush(stdout);
-			usleep(100 * 1000);//注意这里的延时不能省略，否则进程会占用太多CPU时间
+			//这里要加一个延时，否则当抢不到文件锁时，会占用太多CPU
+			usleep(50 * 1000);
 			continue;
 		}
 		else
@@ -64,14 +65,15 @@ int main(void)
 		printf("now locking...\n");
 
 		/*
-		测试：这里加一个较长的延时，同时运行几个进程，当占用锁的时候，观察其他进程是不是阻塞
+		测试：这里加一个较长的延时，将本程序编译后同时运行几个进程，当占用锁的时候，观察其他进程是不是阻塞
 		测试结果：其他进程被阻塞，文件锁是能生效的
 		*/
 		sleep(10); 
+		
 		remove_file_lock();
 		
 		printf("now unlock!!!\n");
-		usleep(200*1000); //适当延时，避免进程长时间抢占锁
+		usleep(200*1000); //适当延时，给其他进程预留一点时间，避免进程一直抢占锁
 	}
 	
 }

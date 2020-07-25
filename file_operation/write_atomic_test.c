@@ -10,7 +10,6 @@
 程序功能描述：运行多个进程，并调用wirte向同一个文件续写数据，判断write是不是原子操作
 */
 
-#if 0
 #define TEST_FILE "./test.txt"
 #define WRITE_CNT	1024
 int main(void)
@@ -30,17 +29,20 @@ int main(void)
 	while(1)
 	{
 
-		/*
-		测试：同时运行多个进程去写文件  ，命令如下：
-		for i in 1 2 3 4 5;do  ./a.out  & done
-			
-		执行cat test.txt | grep <pid> 命令分析结果，观察写入是否正常
 
-		测试结果：如果write不是原子操作，那么多个进程写入的数据的过程中，是会相互打断的，进而导致写入数据不对，但实际结果却是
-		正确的
-		原因：网上的博客说write系统调用在buf大小不超过内核缓存的时候是原子操作
-		*/
+	/*
+	测试：同时运行多个进程去写文件  ，命令如下：
+	for i in 1 2 3 4 5;do  ./a.out	& done
+	执行cat test.txt | grep <pid> 命令分析结果，观察写入是否正常
+	
+	分析：如果write不是原子操作，那么当多个进程同时调用write写入数据时，文件数据是会混乱的
+	
+	测试结果：每个进程写入数据正常，没有被打乱，说明write是原子操作
+	
+	网上的博客说write系统调用在buf大小不超过内核缓存的时候是原子操作
+	*/
 		
+
 		if (write_cnt < WRITE_CNT)
 		{
 			memset(write_buf, 0, sizeof(write_buf));
@@ -70,4 +72,3 @@ int main(void)
 	close(fd);
 	return 0;
 }
-#endif 

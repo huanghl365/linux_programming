@@ -31,7 +31,7 @@ oldstate：输出型参数，保存原先的取消状态
 参数：
 type：设置线程的取消类型
 	PTHREAD_CANCEL_ASYNCHRONOUS  表示接收到取消请求后立即采取行动终止线程
-	PTHREAD_CANCEL_DEFERRED		 表示接收到取消请求后，需要一直等待知道线程执行了以下函数
+	PTHREAD_CANCEL_DEFERRED		 表示接收到取消请求后，需要一直等待直到线程执行了以下函数
 	才采取行动(pthread_join\pthread_cont_wait\pthread_cont_timedwait\pthread_testcancel
 	\semwait\sigwait),其他阻塞函数也可能成为取消点，比如read、wait
 oldtype：输出型参数，保存原先的取消类型

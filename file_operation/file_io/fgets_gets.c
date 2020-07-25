@@ -37,7 +37,7 @@ s：指向用来保存读取字符串的buffer
 
 
 /*
-程序功能描述：研究fgets 和 gets函数的具体使用及区别
+程序功能描述：分析fgets 和 gets函数的使用区别
 */
 
 #define READ_SIZE 128
@@ -47,28 +47,24 @@ int main(void)
 	char ch,ch2;
 	char read_buffer[READ_SIZE] = "\0";
 
-#if 0	 //fgets从文件流循环读取
-	fp1 = fopen("test.txt", "r+");  //更新方式打开，读写
-	if (NULL == fp1)
-	{
-		perror("fopen");
-		return 1;
-	}
-	fseek(fp1, 0, SEEK_SET);  
-	while(NULL != fgets(read_buffer, READ_SIZE, fp1))  
-	{
-		printf("%s", read_buffer);
-		memset(read_buffer, 0, READ_SIZE);
-	}
-	
-	fclose(fp1);
-#endif 
 
-#if 1		//fgets 和 gets分别从标准输入读取
+
+	
+/*
+测试：fgets 和 gets分别从标准输入读取
+测试结果：
+fgets会保留换行符，需要处理一下，去掉换行符；
+fgets对读取的字符串有长度上的限制，读取size-1个字节，并在末尾添加'\0'
+
+gets当读取到换行符时会丢弃换行符，添加‘\0’；
+gets对读取的字符串长度没有限制，容易溢出，因此最好用fgets替代
+*/
+
+#if 1		
 
 	if (NULL != fgets(read_buffer, READ_SIZE, stdin)) 
-	{
-		if ('\n' == read_buffer[strlen(read_buffer)-1])  //fgets会保留换行符，这里处理一下，去掉换行符
+	{	
+		if ('\n' == read_buffer[strlen(read_buffer)-1])  
 		{
 			read_buffer[strlen(read_buffer)-1] = '\0';
 		}
@@ -76,7 +72,6 @@ int main(void)
 		printf("%s", read_buffer);
 	}
 
-	//gets对读取字符串长度没有限制，因此最好使用fgets替代
 	memset(read_buffer, 0, READ_SIZE);
 	if (NULL != gets(read_buffer))
 		printf("%s", read_buffer);

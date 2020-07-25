@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 /*
-程序功能描述：给文件区域等待方式和非等待方式设置共享锁和独占锁
+程序功能描述：分别以阻塞方式和分阻塞方式给文件区域设置独占锁
 程序名：lock2
 */
 
@@ -25,15 +25,6 @@ int main()
 		exit(1);
 	}
 
-
-	//设置共享锁：10-30 byte
-	//region_1.l_type = F_RDLCK;
-	
-	region_1.l_type = F_WRLCK;
-	region_1.l_whence = SEEK_SET;
-	region_1.l_start = 10;
-	region_1.l_len = 20; 
-
 	//设置独占锁：40-50 byte
 	region_2.l_type = F_WRLCK;
 	region_2.l_whence = SEEK_SET;
@@ -41,23 +32,12 @@ int main()
 	region_2.l_len = 10;
 	
 	/*
-	测试：先运行lock1, 再运行lock2，观察非等待方式和等待方式获取锁的区别
-	测试结果：非等待方式 会立即返回， 等待方式会直到获取到锁才返回
+	测试：先运行lock1, 再运行lock2，观察阻塞和非阻塞方式获设置独占锁的区别
+	测试结果：非阻塞方式 会立即返回， 阻塞方式会一直等待直到给区域加锁才返回
 	*/
 #if 1
 	printf("Process %d locking file\n", getpid());
 	//非等待方式
-	res = fcntl(file_desc, F_SETLK, &region_1);
-	if (res == -1) 
-	{
-		fprintf(stderr, "Failed to lock region 1\n");
-	}
-	else
-	{
-		printf("lock region 1 success");
-	}
-
-	
 	res = fcntl(file_desc, F_SETLK, &region_2);
 	if (res == -1) 
 	{
@@ -68,18 +48,8 @@ int main()
 		printf("lock region 2 success");
 	}
 
-	//等待方式
-	res = fcntl(file_desc, F_SETLKW, &region_1);
-	if (res == -1) 
-	{
-		fprintf(stderr, "Failed to lock region 1\n");
-	}
-	else
-	{
-		printf("lock region 1 success");
-	}
 
-	
+	//等待方式
 	res = fcntl(file_desc, F_SETLKW, &region_2);
 	if (res == -1) 
 	{

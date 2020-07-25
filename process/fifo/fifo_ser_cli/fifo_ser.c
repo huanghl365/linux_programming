@@ -11,8 +11,14 @@
 #include "fifo_ser.h"
 
 /*
-程序功能描述：编写一个基于FIFO的服务端/客户端程序，多个客户端按照协议格式通过同一个命名管道向服务端发送数据，
-服务端处理之后与每个客户端建立一个专属通道并发送答复。(命名管道是单向的，所以创建两个)
+程序功能描述：
+编写一个基于FIFO的服务端/客户端程序，多个客户端按照协议格式通过同一个命名管道
+向服务端发送数据，服务端处理之后与每个客户端建立一个专属通道并发送答复。
+*/
+
+/*
+测试说明：
+同时运行多个客户端，shell命令为：for i in 1 2 3 4 5;do  ./fifo_cli.out & done
 */
 
 int main()
@@ -74,7 +80,6 @@ int main()
            		 }
 				
 				 //printf("after proc, cli_msg_buffer = %s\n", climsg.cli_msg_buffer);
-				
 				 write(cli_fifo, climsg.cli_msg_buffer, strlen(climsg.cli_msg_buffer));
 				 close(cli_fifo);
 			

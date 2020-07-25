@@ -24,16 +24,16 @@ int main(int argc, char *argv[])
 	}
 
 
-	uid = getuid();	//获取当前进程执行用户的用户ID
-	gid = getgid(); //获取当前进程执行用户的用户组ID
+	uid = getuid();	
+	gid = getgid(); 
 	printf("the execute user id of the process: uid %d  gid %d\n", uid, gid);
 
 	
 	ret = stat(argv[1], &statbuf);
 	if (0 == ret)
 	{
-		printf("st_uid: %d\n", statbuf.st_uid); 	//文件的uid
-		printf("st_gid: %d\n", statbuf.st_gid); 	//文件的gid
+		printf("st_uid: %d\n", statbuf.st_uid); 	
+		printf("st_gid: %d\n", statbuf.st_gid); 	
 	}
 	
 	//如果要修改文件的属主，那么进程需要有超级用户的权限
@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
 	ret = stat(argv[1], &statbuf);
 	if (0 == ret)
 	{
-		printf("st_uid: %d\n", statbuf.st_uid); 	//文件的uid
-		printf("st_gid: %d\n", statbuf.st_gid); 	//文件的gid
+		printf("st_uid: %d\n", statbuf.st_uid); 	
+		printf("st_gid: %d\n", statbuf.st_gid); 	
 	}
 	
 	return 0;

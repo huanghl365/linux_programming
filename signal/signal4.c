@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 
 /*
-程序功能描述：使用signal调用和alarm调用封装自己的sleep函数
+程序功能描述：使用signal调用和alarm调用封装sleep函数
 */
 typedef void (*sighandler_t)(int);
 void func(int sig)

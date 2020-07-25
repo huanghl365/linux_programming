@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -36,6 +35,7 @@ int main() {
 	/*
 	测试：先运行lock1程序给文件部分区域加锁	共享锁：10-30 byte 独占锁：40-50 byte
 	然后运行本进程，查询文件区域能否设置共享锁以及独占锁
+	
 	测试结果：
 	10-30 byte是共享锁，因此其他进程可以设置共享锁，不能设置独占锁
 	40-50 byte是独占锁，因此其他进程共享锁和独占锁都无法设置
@@ -44,16 +44,21 @@ int main() {
 #if 1
 	for (start_byte = 0; start_byte < 99; start_byte += SIZE_TO_TRY) {
 
-	
+		/*
+		有两种方式可以判断区域能否加锁：
+
+		1、设置l_pid为-1，如果区域能够设置锁的话，F_GETLK查询之后 l_pid不会被设置为进程ID，
+		表示区域没有被独占。
+
+		2、F_GETLK查询之后，如果区域能够设置锁的话，l_type会被设置为F_UNLCK，表示区域没有被独占。
+		*/
+		
 		region_to_test.l_type = F_WRLCK; //独占锁
 		region_to_test.l_whence = SEEK_SET;
 		region_to_test.l_start = start_byte;
 		region_to_test.l_len = SIZE_TO_TRY;
-		/*这里要设置l_pid为-1，如果能够设置锁的话，l_pid是不会被刷新的，表示
-		进程没有被独占，因此我们可以通过判断l_pid是否为-1确定能否设置锁*/
 		region_to_test.l_pid = -1;	   
 		
-
 		printf("Testing F_WRLCK on region from %d to %d\n", 
 			   start_byte, start_byte + SIZE_TO_TRY);
 		
@@ -63,7 +68,7 @@ int main() {
 			exit(1);
 		}
 
-		//查询的时候，l_type会被刷新，因此也可以查询l_type来判断是否可以加锁
+		
 		if (region_to_test.l_type != F_UNLCK) {
 		//if (region_to_test.l_pid != -1) {
 			printf("Lock would fail. F_GETLK returned:\n");

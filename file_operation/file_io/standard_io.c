@@ -53,12 +53,12 @@ stream：指向文件流指针
 一般用nmemb大小与返回值做比较，如果不相等就是出错。
 
 注意：写入数据的时候，需要写入多少数据就指定多大的数目，如果指定的count大小超过数组缓冲区的大小，
-还是按照指定的大小输入数据，这样数组就会越界，写入的数据是不可知的。
+那么数组就会越界，写入的数据是不可知的。
 */
 
 
 /*
-程序功能说明：测试fopen调用，读取一个文件，写入另一个文件
+程序功能说明：标准文件IO，读取一个文件，写入另一个文件
 */
 
 #define READ_NUM  1024
@@ -83,8 +83,9 @@ int main(void)
 
 	while(1)
 	{
-		read_ret = fread(read_buffer, 1, READ_NUM, fp2);  //其实读一行最好还是用fgets,如果一行不超过READ_NUM,那么这里可以用fread
+		read_ret = fread(read_buffer, 1, READ_NUM, fp2); 
 		printf("read_ret = %d\n", read_ret);
+		
 		if (read_ret == 0) //返回0，可能达到文件尾或者发生错误
 		{
 			if (ferror(fp1) != 0) //判断是不是到达文件尾

@@ -34,11 +34,11 @@ stream：文件流指针
 */
 int main(void)
 {
-	FILE *fp1;  //指针前面一定加上*
+	FILE *fp1;  
 	char ch,ch2;
 	char read_buffer[READ_SIZE] = "\0";
 	int ret =0 ;
-	fp1 = fopen("test.txt", "r+");  //更新方式打开，读写
+	fp1 = fopen("test.txt", "r+");  
 
 
 	while(NULL != fgets(read_buffer, READ_SIZE, fp1))  
@@ -58,6 +58,7 @@ int main(void)
 	{
 		printf("the file operation have error\n");
 	}
+	
 	//clearerr(fp1); //清除文件指针指向的文件流的文件尾标识和错误标识
 	
 	if (feof(fp1) != 0)

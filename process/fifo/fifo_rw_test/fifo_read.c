@@ -52,9 +52,6 @@ int main()
 	}
 
 	memset(read_buffer, 0, BUFFER_SIZE);
-
-
-	sleep(5);  //适当延时，观察写端的现象
 	while(1)
 	{
 		
@@ -65,22 +62,12 @@ int main()
 			printf("read %d bytes read_cnt = %d\n", ret, read_cnt);
 			//printf("read content:%s\n", read_buffer); //这里打印会影响读写效率
 			memset(read_buffer, 0, BUFFER_SIZE);
-
-			/*
-			测试：适当延时，观察写端的现象
-			测试结果：
-			一开始读端延时5s，此时写端写入65536个字节后才处于阻塞状态。			
-			之后当读端读取累计PIPE_BUF大小数据后，写端才能继续写入。
-
-			疑问：什么一开始写端写入			65536个字节后才处于阻塞状态，为何不是写入PIPE_BUF就阻塞阻塞。
-			*/
-			usleep(500*1000);
+			usleep(200*1000);
 		}
 		else
 			break;
 	}
-
-	close(fifo_fd);
+	close(fifo_fd);	
 	printf("the process %d has close fifo_fd\n", getpid());
 	
 	return 0;

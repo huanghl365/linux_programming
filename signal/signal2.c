@@ -37,10 +37,10 @@ void func(int sig)
 		printf("You send a SIGALRM signal\n");
 	}
 	/*
-	这里加个延时，测试 pause是否需要等待信号处理函数执行完毕才返回
+	测试：这里加个延时，测试 pause是否需要等待信号处理函数执行完毕才返回
 	测试结果：测试发现是需要的
 	*/
-	//sleep(2); 
+	sleep(2); 
 }
 
 int main(void)

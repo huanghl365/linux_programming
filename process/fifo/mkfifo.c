@@ -13,6 +13,7 @@
 函数原型：int mkfifo(const char *pathname, mode_t mode);
 描述：用来创建一个命名管道用于进程间通信。
 管道是单向的，因此使用open打开管道时，只能以O_RDONLY或者 O_WRONLY方式打开。
+
 参数：
 pathname: 指定命名管道的路径名
 mode:指定创建的命令管道文件的权限，创建的文件的权限为mode＆~umask，~mask不包括执行权限。

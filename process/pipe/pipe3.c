@@ -6,10 +6,67 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
+
 /*
 程序功能描述：使用pipe创建管道，并通过管道与子进程中execl启动的程序通信
 */
-#if 0  //编译生成pipetest,用于传递管道读端并读取数据
+#if 1
+int main(void)
+{
+	int pipe_fd[2];
+	int ret;
+	char write_buf[50] = "\0";
+	char pipe_read_fd_buf[10] = "\0";
+	int pid, status;
+	ret = pipe(pipe_fd); 
+	if (0 != ret)
+	{
+		perror("pipe");
+		exit(1);
+	}
+	pid = fork();
+	if(pid == -1)
+	{
+		printf("进程复制失败\n");
+		exit(1);
+	}
+	
+	if (0 == pid) 
+	{
+		
+		sprintf(pipe_read_fd_buf, "%d", pipe_fd[0]);
+		/*
+		调用execl执行的程序会继承子进程资源，因此pipetest可以使用管道与父进程通信，
+		但是要把管道的描述符作为参数传递给pipetest
+		*/
+		execl("./pipetest","pipetest",pipe_read_fd_buf, NULL); 
+		exit(0);
+	}
+
+	if (pid > 0)
+	{
+		sprintf(write_buf, "I am parent process, my pid is %d", getpid()); //可以直接操作write_buf，因为fork会复制变量
+		write(pipe_fd[1], write_buf, strlen(write_buf)); 
+		
+		pid = waitpid(pid, &status, 0);  
+		if (-1 == pid)
+		{
+			perror("waitpid");
+			exit(1);
+		}
+		
+	}
+	
+	return 0;
+}
+#endif 
+
+
+
+/*
+程序功能描述：编译生成pipetest 用于测试管道通信
+*/
+#if 0  
 int main(int argc, char *argv[]) 
 {
 	int pipe_read_fd = -1;
@@ -42,59 +99,4 @@ int main(int argc, char *argv[])
 }
 #endif 
 
-#if 1
-int main(void)
-{
-	int pipe_fd[2];
-	int ret;
-	char write_buf[50] = "\0";
-	char pipe_read_fd_buf[10] = "\0";
-	int pid, status;
-	ret = pipe(pipe_fd); //创建子进程之前先创建管道，父子进程共享管道
-	if (0 != ret)
-	{
-		perror("pipe");
-		exit(1);
-	}
-	pid = fork();
-	if(pid == -1)
-	{
-		printf("进程复制失败\n");
-		exit(1);
-	}
-	
-	if (0 == pid) 
-	{
-		
-		sprintf(pipe_read_fd_buf, "%d", pipe_fd[0]);
-
-		//执行一个新的程序，因为调用execl，因此pipetest会继承进程资源比如管道
-		execl("./pipetest","pipetest",pipe_read_fd_buf, NULL); 
-		exit(0);
-	}
-
-	if (pid > 0)
-	{
-		sprintf(write_buf, "I am parent process, my pid is %d", getpid()); //直接操作write_buf，因为fork会复制变量
-		write(pipe_fd[1], write_buf, strlen(write_buf)); 
-		
-		pid = waitpid(pid, &status, 0);  //阻塞回收子进程
-		if (-1 != pid)
-		{
-			printf("parent:父进程回收的子进程ID：%d\n", pid);
-			printf("parent:子进程是否正常终止：%d\n", WIFEXITED(status));
-			printf("parent:子进程是否非正常终止：%d\n", WIFSIGNALED(status));   
-			printf("parent:子进程终止退出码：%d\n", WEXITSTATUS(status));
-		}
-		else
-		{
-			perror("waitpid");
-			exit(1);
-		}
-		
-	}
-	
-	return 0;
-}
-#endif 
 

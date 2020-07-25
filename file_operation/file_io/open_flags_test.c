@@ -26,13 +26,10 @@ O_NONBLOCK  在读取不到数据或是写入缓冲区已满会马上return，�
 
 mode ：指定创建文件的权限， S_IRUSR 表示读 S_IWUSR 表示写，S_IXUSR表示执行，
 创建的文件的权限为mode＆~umask，~mask不包括执行权限。
-
-
 返回值：返回获取的文件描述符，失败返回-1并设置errno
-*/
 
 
-/*
+
 函数原型：ssize_t read(int fd, void *buf, size_t count);
 描述：read用来将文件描述符fd中读取count个字符取到缓冲区buf中
 参数：
@@ -43,6 +40,7 @@ count：从文件中读取的字节总数
 返回读取的字节数，并且文件当前的位置会偏移返回的字节数大小。
 如果读取的字节数小于指定的字节总数count，并不一定代表错误（可能到达文件尾等原因造成）。
 如果读取错误，则返回-1，并设置对应的errno.
+
 
 
 函数原型：ssize_t write(int fd, const void *buf, size_t count);
@@ -62,37 +60,37 @@ count：指定要写入到文件的字节总数
 */
 
 
-
 /*
 程序功能描述：测试open调用 O_RDONLY O_WRONLY O_TRUNC O_CREAT O_EXCL 这几个flag的使用
 */
-#if 1
 int main(void)
 {
 	unsigned char ch[1024] = {'\0'};
 	int in, out;
 	int nread = 0;
 	//只读方式打开文件
-	in = open("/home/mxc/test.txt", O_RDONLY);
+	in = open("./test.txt", O_RDONLY);
+	if (in  < 0)
+	{
+		perror("open");
+		exit(1);
+	}
 
-	//创建文件，文件存在不创建，默认不清空文件也不接续文件，从头开始写文件
-	//out = open("/home/mxc/file.out", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-	 
-	//创建文件，文件存在不创建并清空文件
-	//out = open("/home/mxc/file.out", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 
-	//创建文件，文件存在则报错，返回-1
-	out = open("/home/mxc/file.out", O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
-
-	out = open("/home/mxc/file.out")
+	//创建只写文件，文件存在则不创建
+	//out = open("./file.out", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	
+	//创建只写文件，文件存在则不创建，并清空文件
+	out = open("./file.out", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	
+	//创建只写文件，文件存在则报错
+	//out = open("./file.out", O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 	if (out < 0)
 	{
 		perror("open");
 		exit(1);
 	}
 	
-	//读取文件内容写到另一个文件
-	//read属于系统调用，每次调用都会有用户到内核空间的切换开销，因此可以通过加大每次读取字节，减小切换次数减小开销。
 	while ((nread = read(in, ch, 1024)) > 0 )
 	{
 		write(out, ch, nread);
@@ -102,96 +100,3 @@ int main(void)
 	close(out);
 	return 0;
 }
-#endif
-
-
-/*
-程序功能描述：测试open调用中的 O_SYNC  的使用
-*/
-#if 0
-int main(int argc, char *argv[])
-{
-	int out = -1;
-	int ret = -1;
-	char buf[100] = {'\0'};
-	char writebuf[50] = "the rest\n";
-	 
-	//创建文件，文件存在则不创建，不阻塞，写入数据立即同步到磁盘文件
-	//可以一边写数据，一边用cat命令查看磁盘文件
-	out = open("test.txt", O_WRONLY | O_CREAT | O_SYNC |O_NONBLOCK); 		  
-	if (out < 0)
-	{
-		perror("open");
-		exit(1);
-	}
-
-	while(1)
-	{
-		ret = write(out, writebuf, strlen(writebuf));
-		if(-1 != ret)
-		{
-			printf("write success:%s\n", writebuf);
-		}
-		else
-		{
-			printf("write failed\n");
-			close(out);
-			exit(1);
-		}
-		sleep(5);
-	}
-
-	close(out);
-	return 0;
-	
-}
-#endif 
-
-/*
-程序功能描述：测试open调用中的O_APPEND 的使用
-*/
-#if 0
-int main(void)
-{
-	unsigned char readbuf[1024] = {'\0'};
-	int out, ret;
-	char writebuf[1024] = "THE WORD I WANT TO SAY : HELLO WORLD";
-
-	//打开文件进行读写，写的时候为续写
-	out = open("test.txt", O_RDWR | O_APPEND);
-	if (out < 0)
-	{
-		perror("open");
-		exit(1);
-	}
-	ret = write(out, writebuf, strlen(writebuf));
-	if (-1 == ret)
-	{
-		perror("write");
-		close(out);
-		exit(1);
-	}
-
-	//当open中使用了O_APPEND选项的时候，如果先对文件写，那么写完后文件指针会移动到尾部，再去读的时候需要先用lseek进行定位
-	//当open中使用了O_APPEND选项的时候，如果先对文件读，那么文件指针默认从文件头开始，此时并不需要使用lseek定位到文件头
-	lseek(out, 0, SEEK_SET);
-	
-	ret = read(out, readbuf, 10);
-	if (-1 != ret)
-	{
-		printf("读取的字符串: %s\n", readbuf);
-	}
-	else
-	{
-		perror("read");
-		close(out);
-		exit(1);
-	}
-
-	
-	close(out);
-	return 0;
-}
-#endif
-
-

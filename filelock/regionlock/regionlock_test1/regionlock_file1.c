@@ -31,13 +31,13 @@ F_GETLK	获取打开的文件fd的锁信息
 F_SETLK	对fd指向的文件的某个区域加锁或解锁
 F_SETLKW	与F_SETLK作用一样，不用的是获取不到锁时会一直等待知道获取成功
 
-----------------
 flock_structure:区域锁定结构体，结构体成员如下：
 short l_type
 short l_whence
 short l_start
 off_t l_len
 off_t l_pid
+--------------------------
 
 type：指定锁类型，锁类型如下所示：
 F_RDLCK 建立共享锁（读锁），区域被一个进程设置共享锁之后，可以被其他进程设置共享锁，但是不能设置独占锁
@@ -49,7 +49,7 @@ l_whence：指定区域起始位置，SEEK_CUR、SEEK_END、SEEK_SET中的一个
 l_start：指定区域的第一个字节
 l_len：指定区域字节数
 l_pid：记录持有锁的进程
------------------
+----------------------------
 
 返回值：
 F_GETLK和F_SETLK调用成功返回非-1，失败返回-1。
@@ -64,6 +64,8 @@ void show_lock_info(struct flock *to_show) {
     printf("l_len %d, ", (int)to_show->l_len);
     printf("l_pid %d\n", to_show->l_pid);
 }
+
+
 
 /*
 程序功能描述：给文件区域设置共享锁和独占锁
@@ -110,60 +112,6 @@ int main()
 	res = fcntl(file_desc, F_SETLK, &region_2);
 	if (res == -1) 
 		fprintf(stderr, "Failed to lock region 2\n");	
-
-
-/*
-测试：当前进程锁定区域后，查询锁定区域的锁信息
-测试结果：区域虽然加了锁，但是查询的时候发现区域是处于解锁状态，
-说明同个进程可以对同一个区域反复加锁。
-*/
-#if 0
-	region_to_test.l_type = F_WRLCK;
-	region_to_test.l_whence = SEEK_SET;
-	region_to_test.l_start = 10;
-	region_to_test.l_len = 20;
-	region_to_test.l_pid = -1;	   
-	
-
-	printf("Testing F_WRLCK on region from %d to %d\n", 
-		   10, 30);
-	
-	res = fcntl(file_desc, F_GETLK, &region_to_test);
-	if (res == -1) {
-		fprintf(stderr, "F_GETLK failed\n");
-		exit(1);
-	}
-	
-	if (region_to_test.l_pid != -1) {
-		printf("Lock would fail. F_GETLK returned:\n");
-	}
-	else {
-		printf("F_WRLCK - Lock would succeed\n");
-	}
-	show_lock_info(&region_to_test);
-
-	region_to_test.l_type = F_WRLCK;
-	region_to_test.l_whence = SEEK_SET;
-	region_to_test.l_start = 40;
-	region_to_test.l_len = 10;
-	region_to_test.l_pid = -1;	  
-	printf("Testing F_WRLCK on region from %d to %d\n", 
-		   40, 50);
-	
-	res = fcntl(file_desc, F_GETLK, &region_to_test);
-	if (res == -1) {
-		fprintf(stderr, "F_GETLK failed\n");
-		exit(1);
-	}
-	
-	if (region_to_test.l_pid != -1) {
-		printf("Lock would fail. F_GETLK returned:\n");
-	}
-	else {
-		printf("F_WRLCK - Lock would succeed\n");
-	}
-	show_lock_info(&region_to_test);
-#endif 
 		
 	sleep(30);
 
