@@ -21,20 +21,18 @@ thread：线程标识符
 */
 
 /*
-程序功能描述：通过调用pthread_detach实现线程分离
+程序功能描述：通过调用pthread_detach实现线程分离，然后测试创建1M个线程
 */
 
-void*thread_func(void*arg) //线程执行函数
+void*thread_func(void*arg) 
 {
-#if 1 //通过pthread_detach设置线程分离
 	int ret;
-	ret = pthread_detach(pthread_self()); 
+	ret = pthread_detach(pthread_self());   //通过pthread_detach设置线程分离
 	if (0 != ret)
 	{
 		perror("pthread_detach");
 		pthread_exit("thread detach failed");
 	}
-#endif 
 	pthread_exit(NULL);
 	
 }
@@ -47,7 +45,8 @@ int main(void)
 
 	/*
 	测试创建1M个线程，连续三次创建失败则结束创建
-	测试结果：主线程没有使用pthread_join回收线程，因此如果子线程调用了pthread_detach实现线程分离，可以顺利
+	测试结果：
+	主线程没有使用pthread_join回收线程，因此如果子线程调用了pthread_detach实现线程分离，可以顺利
 	创建1M个线程，如果没有调用pthread_detach，因为过多的僵尸线程占用资源没有释放，只能创建32751个线程
 	*/
 	for (i = 0; i < 1024 * 1024 && try_cnt < 3; i++) 

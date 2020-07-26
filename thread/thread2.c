@@ -31,7 +31,7 @@ attr：输出型参数，指向线程属性的指针
 函数原型：int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate);
 描述：设置线程默认分离状态，使用pthread_attr_init初始化后的线程默认是PTHREAD_CREATE_JOINABLE的
 参数：
-attr：输出型参数，指向线程属性的指针
+attr：输入型参数，指向线程属性的指针
 detachstate：设置线程是否分离
 	PTHREAD_CREATE_DETACHED	//分离线程
 	PTHREAD_CREATE_JOINABLE //回收线程
@@ -48,7 +48,7 @@ attr：指向线程属性的指针
 */
 
 /*
-程序功能描述：通过设置线程属性实现线程分离
+程序功能描述：通过设置线程属性实现线程分离，然后测试创建1M个线程
 */
 
 void*thread_func(void*arg) //线程执行函数
@@ -71,9 +71,7 @@ int main(void)
 		perror("pthread_attr_init");
 		exit(1);
 	}
-	/*
-	设置线程分离，可以通过pthread_attr_setdetachstate也可以通过pthread_detach
-	*/
+	
 	//ret = pthread_attr_setdetachstate(&pthread_attr, PTHREAD_CREATE_DETACHED); //设置分离线程
 	ret = pthread_attr_setdetachstate(&pthread_attr, PTHREAD_CREATE_JOINABLE); //设置回收线程
 	
@@ -84,11 +82,10 @@ int main(void)
 	}
 	
 	/*
-	以PTHREAD_CREATE_DETACHED和PTHREAD_CREATE_JOINABLE属性 测试创建1M个线程，连续三次创建失败则结束创建
+	测试：分别PTHREAD_CREATE_DETACHED和PTHREAD_CREATE_JOINABLE属性创建1M个线程，连续三次创建失败则结束创建
 	测试结果：
 	PTHREAD_CREATE_DETACHED：因为设置了线程资源，无需使用pthread_join，系统自动回收线程，因此成功创建1M个线程
-	PTHREAD_CREATE_JOINABLE：因为没有使用pthread_join回收线程，导致过多的僵尸线程占用资源没有释放，
-	因此只能创建32751个线程
+	PTHREAD_CREATE_JOINABLE：因为没有使用pthread_join回收线程，导致过多的僵尸线程占用资源没有释放，因此只能创建32751个线程
 	*/
 	for (i = 0; i < 1024 * 1024 && try_cnt < 3; i++) 
 	{
