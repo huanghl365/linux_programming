@@ -56,17 +56,17 @@ char sharedbuffer[READ_SIZE] = "\0";
 
 sem_t sem_clamp;
 
-void*thread_func(void*arg) //线程执行函数
+void*thread_func(void*arg) 
 {
 	sem_wait(&sem); //等待信号量，信号量减一
 	while(0 != strncmp(sharedbuffer, "end", 3))
 	{
-		printf("The str:%s", sharedbuffer);
+		printf("\nThe str:%s", sharedbuffer);
 		printf("The len of str:%d\n", (int)strlen(sharedbuffer));	
 		sem_wait(&sem);
 	}
 	
-	pthread_exit("thanks for the get the cpu time");//退出线程，这里决不能指向一个局部变量的指针
+	pthread_exit("thanks for the get the cpu time");
 	
 }
 
@@ -75,7 +75,7 @@ int main()
 	pthread_t pth_id;
 	int ret;
 	void *retval;
-	ret = pthread_create(&pth_id, NULL, thread_func, NULL);//创建线程
+	ret = pthread_create(&pth_id, NULL, thread_func, NULL);
 	if (0 != ret)
 	{
 		perror("pthread_create");
@@ -88,16 +88,25 @@ int main()
 		perror("sem_init");
 		exit(1);
 	}
+	/*
+	测试：使用二值信号量做线程同步,主线程从键盘读取字符串，子线程做统计
+	测试结果：效果正常，主线程能及时处理用户输入，子线程也能及时统计。
 	
+	对比互斥锁做线程同步：使用信号量做线程同步时，不需要像互斥锁一样使用延时来调试线程抢占互斥锁，实现相对简单。
+
+	问题：这里有一个问题，主线程不会等子线程处理完就继续处理 用户输入，因此如果要等子线程统计完再处理用户输入的话，
+	则处理逻辑还要修改，可以通过再增加一个信号量来实现。
+	*/
 	while(0 != strncmp(sharedbuffer, "end", 3))
 	{
+		
 		printf("enter string to count(\"end\" to exit):");
 		fgets(sharedbuffer, READ_SIZE, stdin);
 		sem_post(&sem);	//信号量加一
 	}
 	
 	printf("waiting for join the thread\n");
-	ret = pthread_join(pth_id, &retval); //阻塞等待回收线程
+	ret = pthread_join(pth_id, &retval); 
 	if (0 == ret)
 		{
 		printf("the retval of thread is:%s\n", (char *)retval);

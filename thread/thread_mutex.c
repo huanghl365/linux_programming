@@ -50,7 +50,7 @@ mutex：指向互斥锁变量的指针
 char sharedbuffer[READ_SIZE] = "\0";
 pthread_mutex_t mutex;
 
-void*thread_func(void*arg) //线程执行函数
+void*thread_func(void*arg) 
 {
 
 	sleep(1);
@@ -61,12 +61,12 @@ void*thread_func(void*arg) //线程执行函数
 		printf("The len of str:%d\n", (int)strlen(sharedbuffer));			
 		pthread_mutex_unlock(&mutex);
 		
-		sleep(1);   //这里加延时使得主线程有足够时间加锁
-		
+		usleep(50*1000);   //加延时使得主线程有足够时间加锁
+				
 		pthread_mutex_lock(&mutex);
 	}
 	pthread_mutex_unlock(&mutex);
-	pthread_exit("thanks for the get the cpu time");//退出线程，这里决不能指向一个局部变量的指针
+	pthread_exit("thanks for the get the cpu time");
 	
 }
 
@@ -83,7 +83,7 @@ int main()
 		exit(1);
 	}
 	
-	ret = pthread_create(&pth_id, NULL, thread_func, NULL);//创建线程
+	ret = pthread_create(&pth_id, NULL, thread_func, NULL);
 	if (0 != ret)
 	{
 		perror("pthread_create");
@@ -98,15 +98,13 @@ int main()
 		
 		fgets(sharedbuffer, READ_SIZE, stdin);
 		pthread_mutex_unlock(&mutex);
-
 		/*
-		这里加延时使得子线程有足够时间加锁
-		测试结果：延时1秒子线程有可能会统计两次，2s则子线程一定会统计两次。这说明在使用互斥锁做线程同步的
-		时候，直接使用延时调试线程捕获互斥锁是不准确的，效率也比不上用两个信号量(无需多余的延时等待)。
+		测试：适当延时，这样子线程就能够有时间来抢占锁，只要我们的输入字符的手速不会远快于50ms，则线程之间的同步是正常的
+		测试结果：效果正常，子线程能及时统计，主线程也能及时处理输入；如果使用信号量
+		注意：使用互斥锁做线程同步时，要控制好延时使线程能够及时获取锁。
+			  如果使用信号量做线程同步的话，则不需要使用延时，实现相对简单。
 		*/
-		sleep(1);
-		//sleep(2);
-		
+		usleep(50*1000); 
 		pthread_mutex_lock(&mutex);
 	}
 	pthread_mutex_unlock(&mutex);
