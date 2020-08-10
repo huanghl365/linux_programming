@@ -72,7 +72,7 @@ int main()
 	if(pid == 0)
 	{
 		printf("子进程ID为：%d\n", getpid());
-		printf("在子进程中,父进程ID为：%d\n", getppid());
+		printf("父进程ID为：%d\n", getppid());
 
 /*
 测试子进程有没有复制父进程的变量和数据
@@ -103,9 +103,10 @@ int main()
 	if(pid > 0)
 	{
 		printf("父进程ID为：%d\n", getpid());
-		printf("在父进程中,子进程ID为：%d\n", pid);
+		printf("子进程ID为：%d\n", pid);
 		
 #if 1
+		sleep(1);
 		if (NULL != dymem)
 		{
 			printf("dymem = %s %p\n", dymem,dymem );
