@@ -41,9 +41,6 @@ int main()
 		printf("子进程ID为：%d\n", getpid());
 		printf("在子进程中,父进程ID为：%d\n", getppid());
 		write(fd, "WORLD", strlen("WORLD"));
-		
-		sleep(1); //等待父进程写完再close
-		
 		close(fd);
 	}
 	
@@ -53,8 +50,6 @@ int main()
 		printf("在父进程中,子进程ID为：%d\n", pid);
 		printf("父进程 文件描述符ID %d\n", fd);
 		write(fd, "HELLO", strlen("HELLO"));
-		
-		sleep(1); //等待子进程写完再close
 		close(fd);
 		
 		pid = waitpid(pid, &status, 0);  
@@ -68,8 +63,8 @@ int main()
 #endif
 
 
-//测试：打开文件再fork，测试交替写
-//测试结果：能够实现交替写
+//测试：打开文件再fork，测试交替读
+//测试结果：能够实现交替读
 
 #if 1
 	if(pid == 0)

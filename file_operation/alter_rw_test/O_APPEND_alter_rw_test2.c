@@ -44,9 +44,6 @@ int main()
 				exit(1);
 			}
 			write(fd1, "WORLD", strlen("WORLD"));
-
-			
-			sleep(1);//等待父进程写完再close
 			close(fd1);
 		}
 		if(pid > 0)
@@ -65,7 +62,6 @@ int main()
 				write(fd2, "HELLO", strlen("HELLO"));
 			}
 
-			sleep(1);//等待子进程写完再close			
 			close(fd2);
 			
 			pid = waitpid(pid, &status, 0);  

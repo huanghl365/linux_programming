@@ -9,6 +9,7 @@
 
 /*
 程序功能描述：将同一个文件使用O_APPEND方式打开两次，测试能否实现交替读写
+说明：同一个文件不使用O_APPEND方式打开，无法实现交替读写
 */
 int main(int argc, char *argv[])
 {
