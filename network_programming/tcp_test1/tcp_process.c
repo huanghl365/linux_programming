@@ -1,6 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
+void sig_process_func(int sig)
+{
+	if (sig == SIGPIPE)
+	{
+		printf("The signal value: %d\n", sig);
+		printf("GET A SIGPIPE SIGNAL\n");
+	}else if (sig == SIGINT){
+		printf("The signal value: %d\n", sig);
+		printf("GET A SIGINT SIGNAL\n");
+	}
+}
+
+
 /*客户端的处理过程*/
 void process_conn_client(int s)
 {

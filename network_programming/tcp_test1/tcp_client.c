@@ -10,24 +10,7 @@
 #define PORT 8888								/*侦听端口地址*/
 
 typedef void (*sighandler_t)(int);
-
-void sigpipe_process_func(int sig)
-{
-	if (sig == SIGPIPE)
-	{
-		printf("The signal value: %d\n", sig);
-		printf("GET A SIGPIPE SIGNAL\n");
-	}
-}
-
-void sigint_process_func(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("The signal value: %d\n", sig);
-		printf("GET A SIGINT SIGNAL\n");
-	}
-}
+void sig_process_func(int sig);
 
 
 int main(int argc, char *argv[])
@@ -45,8 +28,8 @@ SIGINT：ctrl + c 或者kill -2 pid终止进程时，会收到给信号。
 截取退出信号并进行处理，是程序稳定性的基本要求。
 */
 #if 1
-	signal(SIGPIPE, sigpipe_process_func);      
-	signal(SIGINT, sigint_process_func);  
+	signal(SIGPIPE, sig_process_func);      
+	signal(SIGINT, sig_process_func);  
 #endif
 	
 	s = socket(AF_INET, SOCK_STREAM, 0); 		/*建立一个流式套接字 */

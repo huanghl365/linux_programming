@@ -5,8 +5,12 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <signal.h>
+
 #define PORT 8888						/*侦听端口地址*/
 #define BACKLOG 2						/*侦听队列长度*/
+typedef void (*sighandler_t)(int);
+void sig_process_func(int sig);
 
 
 /*
@@ -19,6 +23,12 @@ int main(int argc, char *argv[])
 	struct sockaddr_in client_addr;	/*客户端地址结构*/
 	int err;							/*返回值*/
 	pid_t pid;							/*分叉的进行ID*/
+
+#if 1
+	signal(SIGPIPE, sig_process_func);		
+	signal(SIGINT, sig_process_func);  
+#endif
+
 
 	/*建立一个流式套接字*/
 	ss = socket(AF_INET, SOCK_STREAM, 0);
