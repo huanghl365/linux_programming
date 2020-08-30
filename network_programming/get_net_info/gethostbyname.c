@@ -5,8 +5,8 @@
 
 
 /*
-程序功能描述：使用gethostbyname查询域名的IP地址
-gethostbyname返回的是静态内存地址，是不可重入函数
+程序功能描述：使用gethostbyname函数查询指定域名的IP地址
+注意：gethostbyname返回的是静态内存地址，是不可重入函数
 */
 int main(int argc, char *argv[])
 {	

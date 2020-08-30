@@ -3,6 +3,10 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>
+
+/*
+程序功能描述：介绍IP地址转换函数inet_aton、inet_addr、inet_ntoa的使用
+*/
 int main(int argc, char *argv[])
 {
 	struct in_addr ip,local,network;
@@ -23,7 +27,7 @@ int main(int argc, char *argv[])
 	
 	
 	/*测试inet_addr，点分十进制字符串 -> 二进制地址（网络字节序）
-	inet_addr不能转换255.255.255.255
+	注意：inet_addr不能转换255.255.255.255
 	*/	
 	ip.s_addr = inet_addr(addr1);
 	if(ip.s_addr != -1){
@@ -42,7 +46,7 @@ int main(int argc, char *argv[])
 
 
 	/* 测试inet_ntoa，二进制地址 -> 点分十进制字符串
-	inet_ntoa内部应该会对二进制地址进行字节序转换，因此传给inet_ntoa需要是网络字节序，
+	注意：inet_ntoa内部应该会对二进制地址进行字节序转换，因此传给inet_ntoa需要是网络字节序，
 	否则转换出来的点分十进制可能是逆序的。
 	*/	
 	ip.s_addr = inet_addr(addr1); //网络字节序

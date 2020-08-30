@@ -4,6 +4,9 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 
+/*
+程序功能描述：判断文件描述符是不是socket描述符
+*/
 int issockettype(int fd)
 {
 	struct stat st;

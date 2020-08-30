@@ -5,6 +5,9 @@
 #include <string.h>
 #define ADDRLEN 16
 
+/*
+程序功能描述：介绍IP地址转换函数inet_pton、inet_ntop的使用
+*/
 int main(int argc, char *argv[])
 {
 	struct in_addr ip;
@@ -21,7 +24,7 @@ int main(int argc, char *argv[])
 	}
 	
 	/*测试函数inet_ntop，二进制地址 -> 点分十进制字符串
-	inet_ntop是本地数组保存转换结果，是可重入函数，比inet_ntoa安全
+	注意：inet_ntop是本地数组保存转换结果，是可重入函数，比inet_ntoa安全
 	*/
 	ip.s_addr = htonl(192<<24|168<<16|12<<8|255);		//先转换为网络字节序
 	str = (const char*)inet_ntop(AF_INET, (void*)&ip, (char*)&addr[0], 	ADDRLEN);

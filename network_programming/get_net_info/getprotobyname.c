@@ -1,6 +1,13 @@
 #include <netdb.h>
 #include <stdio.h>
 
+/*
+程序功能描述：使用getprotobyname查询指定协议 的别名、编号等信息
+注意：getprotobyname返回的是静态内存地址，是不可重入函数
+
+*/
+
+
 /* 显示协议项目的函数 */
 void display_protocol(struct protoent *pt)
 {

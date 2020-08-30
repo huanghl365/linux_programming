@@ -8,6 +8,10 @@
 #define PORT 8888						/*侦听端口地址*/
 #define BACKLOG 2						/*侦听队列长度*/
 
+
+/*
+程序功能描述：一个简单的TCP通信流程，包含了对退出信号的处理
+*/
 int main(int argc, char *argv[])
 {
 	int ss,sc;		/*ss为服务器的socket描述符，sc为客户端的socket描述符*/

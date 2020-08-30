@@ -39,10 +39,9 @@ int main(int argc, char *argv[])
 	sighandler_t ret = (sighandler_t)-2;
 
 /*
-关于SIGPIPE：向一个已经关闭的套接字发送数据时，可以得到一个SIGPIPE信号。
+SIGPIPE：向一个已经关闭的套接字发送数据时，可以得到一个SIGPIPE信号。
 SIGPIPE信号会终止当前进程。
-关于SIGINT：ctrl + c 或者kill -2 pid终止进程时，会收到给信号。
-
+SIGINT：ctrl + c 或者kill -2 pid终止进程时，会收到给信号。
 截取退出信号并进行处理，是程序稳定性的基本要求。
 */
 #if 1
