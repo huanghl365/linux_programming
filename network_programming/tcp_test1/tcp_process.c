@@ -2,17 +2,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
-void sig_process_func(int sig)
-{
-	if (sig == SIGPIPE)
-	{
-		printf("The signal value: %d\n", sig);
-		printf("GET A SIGPIPE SIGNAL\n");
-	}else if (sig == SIGINT){
-		printf("The signal value: %d\n", sig);
-		printf("GET A SIGINT SIGNAL\n");
-	}
-}
 
 
 /*客户端的处理过程*/
@@ -48,3 +37,20 @@ void process_conn_server(int s)
 		write(s, buffer, strlen(buffer)+1);/*发给客户端*/
 	}	
 }
+
+
+/*信号SIGINT的处理函数*/
+void sig_proccess(int signo)
+{
+	printf("Catch a exit signal\n");
+	_exit(0);	
+}
+
+/*信号SIGPIPE的处理函数*/
+void sig_pipe(int sign)
+{
+	printf("Catch a SIGPIPE signal\n");
+	
+	/*释放资源*/	
+}
+

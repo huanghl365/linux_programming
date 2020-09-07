@@ -9,9 +9,8 @@
 
 #define PORT 8888								/*侦听端口地址*/
 
-typedef void (*sighandler_t)(int);
-void sig_process_func(int sig);
-
+extern void sig_proccess(int signo);
+extern void sig_pipe(int signo);
 
 int main(int argc, char *argv[])
 {
@@ -19,18 +18,9 @@ int main(int argc, char *argv[])
 	struct sockaddr_in server_addr;			/*服务器地址结构*/
 
 	
-	sighandler_t ret = (sighandler_t)-2;
+	signal(SIGINT, sig_proccess);				/*挂接SIGINT信号，处理函数为		  sig_process()*/
+	signal(SIGPIPE, sig_pipe);					/*挂接SIGPIPE信号，处理函数为sig_pipe()*/
 
-/*
-SIGPIPE：向一个已经关闭的套接字发送数据时，可以得到一个SIGPIPE信号。
-SIGPIPE信号会终止当前进程。
-SIGINT：ctrl + c 或者kill -2 pid终止进程时，会收到给信号。
-截取退出信号并进行处理，是程序稳定性的基本要求。
-*/
-#if 1
-	signal(SIGPIPE, sig_process_func);      
-	signal(SIGINT, sig_process_func);  
-#endif
 	
 	s = socket(AF_INET, SOCK_STREAM, 0); 		/*建立一个流式套接字 */
 	if(s < 0){									/*出错*/

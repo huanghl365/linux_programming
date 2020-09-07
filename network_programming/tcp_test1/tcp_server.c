@@ -9,12 +9,14 @@
 
 #define PORT 8888						/*侦听端口地址*/
 #define BACKLOG 2						/*侦听队列长度*/
-typedef void (*sighandler_t)(int);
-void sig_process_func(int sig);
+
+extern void sig_proccess(int signo);
+extern void sig_pipe(int signo);
 
 
 /*
 程序功能描述：一个简单的TCP通信流程，包含了对退出信号的处理
+使用read 和 write调用进行socket通信
 */
 int main(int argc, char *argv[])
 {
@@ -24,11 +26,8 @@ int main(int argc, char *argv[])
 	int err;							/*返回值*/
 	pid_t pid;							/*分叉的进行ID*/
 
-#if 1
-	signal(SIGPIPE, sig_process_func);		
-	signal(SIGINT, sig_process_func);  
-#endif
-
+	signal(SIGINT, sig_proccess);				/*挂接SIGINT信号，处理函数为		  sig_process()*/
+	signal(SIGPIPE, sig_pipe);					/*挂接SIGPIPE信号，处理函数为sig_pipe()*/
 
 	/*建立一个流式套接字*/
 	ss = socket(AF_INET, SOCK_STREAM, 0);
