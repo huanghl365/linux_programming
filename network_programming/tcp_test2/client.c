@@ -21,10 +21,10 @@ int main(int argc, char*argv[])
 	struct sockaddr_in server_addr;			/*服务器地址结构*/
 	int err;									/*返回值*/
 		
-	if(argc == 1){
+	/*if(argc == 1){
 		printf("PLS input server addr\n");
 		return 0;	
-	}
+	}*/
 	signal(SIGINT, sig_proccess);				/*挂接SIGINT信号，处理函数为												  sig_process()*/
 	signal(SIGPIPE, sig_pipe);	/*挂接SIGPIPE信号，处理函数为sig_pipe()*/
 	
@@ -41,7 +41,7 @@ int main(int argc, char*argv[])
 												/*IP地址为本地任意IP地址*/
 	server_addr.sin_port = htons(PORT);		/*设置服务器端口为8888*/
 	
-	inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
+	//inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
 								/*将用户输入的字符串类型的IP地址转为整型*/
 	connect(s, (struct sockaddr*)&server_addr, sizeof(struct sockaddr));
 												/*连接服务器*/
