@@ -80,14 +80,10 @@ int main()
 		sem_post(&sem);	//信号量加一
 
 		/*
-		测试：这里对标准输入流的字符串再做一个判断，如果符合条件则拷贝HELLOWORLD到sharedbuffer中并增加信号量
-		测试结果：按照设想，线程应该分别统计一次FAST和HELLOWORLD的长度，但是测试发现线程统计了
-		两次HELLOWORLD长度的长度，这是因为我们快速地刷新了两次sharedbuffer，但是线程来不及处理，信号量又增加了两次，
-		因此才会出现这种结果。
-
-		解决方法有两种：
-			1、打开宏定义SEM_CLAMP，再增加一个信号量，完美解决问题。
-			2、不使用信号量，换成互斥锁（但是使用互斥锁需要控制好延时，使线程能及时抢占锁，实现相对复杂）
+		测试：关闭SEM_CLAMP宏定义，然后对标准输入流的字符串增加一个判断，如果符合条件则拷贝HELLOWORLD到sharedbuffer中并增加信号量
+		测试结果：按照设想，子线程应该分别统计一次FAST和HELLOWORLD的长度，但是测试发现子线程统计了两次HELLOWORLD的长度，
+		这是因为主线程快速地刷新了两次sharedbuffer，但是子线程来不及处理第一次刷新的sharedbuffer，信号量又被主线程增加了两次，因此才会出现这种结果。
+		如果打开SEM_CLAMP宏定义，使用两个信号量做同步，则没有此问题。
 		*/
 #if 1
 		if (0 == strncmp(sharedbuffer, "FAST", 4))
