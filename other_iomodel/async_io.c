@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -7,18 +6,6 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
-
-/*
-什么是信号驱动IO？
-异步IO即信号驱动IO，当文件描述符上可执行IO操作时，进程请求内核为自己发送
-一个信号，之后进程就可以执行其他任务直到IO就绪为止，此时内核会发送信号给进程。
-*/
-
-/*
-信号驱动IO对比select、poll
-当需要检查的文件描述符过多时，select和poll的效率会降低；而信号驱动通过文件描述符上报内核，
-内核发信号通知进程可执行IO操作，不用去检查文件描述符IO，因此效率上比select和poll高。
-*/
 
 /*
 int fcntl(int fd, F_SETOWN, pid);
@@ -35,7 +22,7 @@ F_SETOWN	失败返回-1
 
 
 /*
-程序功能描述：测试异步IO的使用
+程序功能描述：测试信号驱动IO的使用
 */
 
 int fd = -1;
@@ -66,7 +53,7 @@ int main(void)
 		exit(1);
 	}
 
-//正常使用异步IO
+//正常使用信号驱动IO
 #if 0
 	signal(SIGIO, async_io_func);			// 注册SIGIO信号处理函数
 	
@@ -91,8 +78,8 @@ int main(void)
 #endif
 
 /*
-测试：先配置异步IO，然后在注册SIGIO处理函数之前 发送SIGIO信号
-测试结果：程序会挂掉，应该先注册SIGIO信号处理函数再配置异步IO*/
+测试：先配置信号驱动IO，然后在注册SIGIO处理函数之前 发送SIGIO信号
+测试结果：程序会挂掉，应该先注册SIGIO信号处理函数再配置信号驱动IO*/
 
 #if 1
 
