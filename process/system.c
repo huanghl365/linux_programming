@@ -17,13 +17,9 @@ execl("/bin/sh", "sh", "-c", command, (char *) 0);
 command：需要执行的命令
 返回值：
 如果command为NULL，那么如果存在shell程序，则返回非零值；如果没有shell程序，则返回0。
-
 如果执行的command添加了&即后台运行，则system则不用等待command执行完成，直接返回0。
-
 如果无法创建子进程，或者无法获取进程的退出状态，则返回值为-1。
-
 如果无法在子进程中执行shell程序，则返回-127。
-
 system需要等待command执行完毕才会返回，如果调用成功，则返回shell程序的
 退出状态(shell程序的终止状态是它执行的最后一个命令的退出状态status)。
 */
