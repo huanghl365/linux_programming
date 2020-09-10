@@ -6,7 +6,7 @@
 
 /*
 函数原型：pid_t waitpid(pid_t pid, int *status, int options);
-函数描述：返回已经终止的子进程的进程ID号，并清除僵尸进程。
+函数描述：作用同于wait，但可指定pid进程清理，可以不阻塞。
 参数：
 pid：指定需要回收的进程的pid；
 	 取值为-1表示不等待某个特定PID的子进程而是回收任意一个子进程
