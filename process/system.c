@@ -37,14 +37,14 @@ int main(int argc, char *argv[])
 {
 
 	int status;	
-	//status = system("ps");
+	status = system("ps");
 	//status = system("./ggg");
-	status = system("./hello");
+	//status = system("./hello");
 	printf("status = %d done\n", status);
 	
 	//-1:system内部子进程创建失败或者内部wait回收失败
 	//127:命令无法执行
-	if (-1 != status && 127 != status)	
+	if (-1 != status && -127 != status)	
 	{
 		printf("进程是否正常终止：%d\n", WIFEXITED(status));    
 		printf("进程终止退出码：%d\n", WEXITSTATUS(status));
