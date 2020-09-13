@@ -45,9 +45,7 @@ int main(int argc, char *argv[])
 	printf("----------------------\n");
 
 
-	/* 测试inet_ntoa，二进制地址 -> 点分十进制字符串
-	注意：inet_ntoa内部应该会对二进制地址进行字节序转换，因此传给inet_ntoa需要是网络字节序，
-	否则转换出来的点分十进制可能是逆序的。
+	/* 测试inet_ntoa，二进制地址（网络字节序）-> 点分十进制字符串
 	*/	
 	ip.s_addr = inet_addr(addr1); //网络字节序
 	if(err != -1){

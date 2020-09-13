@@ -2,9 +2,12 @@
 #include <sys/socket.h>						/*包含socket()/bind()*/
 #include <netinet/in.h>						/*包含struct sockaddr_in*/
 #include <string.h>							/*包含memset()*/
+#include <stdio.h>
+#include <arpa/inet.h>
+
 
 /*
-程序功能描述：一个简单的udp回显程序
+程序功能描述：一个简单的udp回显程序，使用recvmsg和sendmsg进行数据的接收和发送
 */
 
 #define PORT_SERV 8888/*服务器端口*/
@@ -14,12 +17,38 @@ void static udpserv_echo(int s, struct sockaddr*client)
 	int n;												/*接收数据长度*/
 	char buff[BUFF_LEN];								/*接收发送缓冲区															*/
 	socklen_t len;											/*地址长度*/
+	struct iovec v;
+	struct msghdr msg;									/*消息结构*/
+	char ip[16];
+	int port;
+	struct sockaddr_in *client_addr;
 	while(1)											/*循环等待*/
 	{
-		len = sizeof(*client);
-		n = recvfrom(s, buff, BUFF_LEN, 0, client, &len);
-								/*接收数据放到buff中，并获得客户端地址*/
-		sendto(s, buff, n, 0, client, len);/*将接收到的n个字节发送回客户												端*/
+		msg.msg_name = client;									/*保存客户端地址*/
+		msg.msg_namelen = sizeof(struct sockaddr_in);			/*地址长度*/
+		msg.msg_control = NULL;					/*没有控制域*/
+		msg.msg_controllen = 0;					/*控制域长度为0*/
+		msg.msg_iov = &v;						/*挂接向量指针*/
+		msg.msg_iovlen = 1;						/*msg_iov元素数量*/
+		msg.msg_flags = 0;						/*无特殊操作*/
+
+		v.iov_base = buff;
+		v.iov_len = BUFF_LEN;
+		n = recvmsg(s, &msg, 0);
+
+#if 1	//打印客户端地址
+	memset(ip, 0, sizeof(ip));
+	client_addr = (struct sockaddr_in*)client;
+	inet_ntop(AF_INET,(void *)&(client_addr->sin_addr), ip, sizeof(ip));
+	port = ntohs(client_addr->sin_port);
+	printf("get message from %s[%d]\n", ip, port);
+
+#endif
+
+		v.iov_base = buff;
+		v.iov_len = n;
+
+		sendmsg(s, &msg, 0);/*将接收到的n个字节发送回客户端*/
 	}	
 }
 
