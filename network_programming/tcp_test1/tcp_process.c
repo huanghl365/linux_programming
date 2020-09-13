@@ -39,7 +39,9 @@ void process_conn_server(int s)
 	
 	for(;;){								/*循环处理过程*/
 									/*从套接字中读取数据放到向量缓冲区中*/
-		//memset(buffer, 0 , sizeof(buffer));
+	
+		v[0].iov_len = v[1].iov_len = v[2].iov_len = 10;
+		memset(buffer, 0 , sizeof(buffer));
 		size = recvmsg(s, &msg, 0);	
 		if(size == 0){						/*没有数据*/
 			return;	
@@ -91,21 +93,19 @@ void process_conn_client(int s)
 	int i = 0;	
 	for(;;){								/*循环处理过程*/
 								/*从标准输入中读取数据放到缓冲区buffer中*/
-	
-		//memset(buffer, 0, sizeof(buffer));
+		memset(buffer, 0, sizeof(buffer));
 		size = read(0, v[0].iov_base, 10);
 		if(size > 0){						/*读到数据*/
 			v[0].iov_len= size;
 			msg.msg_iovlen = 1;				/*发送只用一个缓冲区*/
-			sendmsg(s, &msg,0);				/*发送给服务器*/
-			//memset(buffer, 0, sizeof(buffer));
+			sendmsg(s, &msg, 0);				/*发送给服务器*/
+			
+			memset(buffer, 0, sizeof(buffer));
 			v[0].iov_len = v[1].iov_len = v[2].iov_len = 10;
 			msg.msg_iovlen = 3;				/*接收使用三个缓冲区*/
 			size = recvmsg(s, &msg,0);		/*从服务器读取数据*/
 			for(i = 0;i<3;i++){
-				if(v[i].iov_len > 0){
-					write(1, v[i].iov_base, v[i].iov_len);/*写到标准输出*/
-				}
+				write(1, v[i].iov_base, v[i].iov_len);/*写到标准输出*/
 			}
 		}
 	}	

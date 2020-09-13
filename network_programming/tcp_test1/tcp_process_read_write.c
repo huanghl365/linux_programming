@@ -27,7 +27,7 @@ void process_conn_server(int s)
 	char buffer[1024];							/*数据的缓冲区*/
 	
 	for(;;){									/*循环处理过程*/		
-		size = read(s, buffer, 1024);			/*从套接字中读取数据放到													缓冲区buffer中*/
+		size = read(s, buffer, 1024);			/*从套接字中读取数据放到缓冲区buffer中*/
 		if(size == 0){							/*没有数据*/
 			return;	
 		}
