@@ -7,17 +7,22 @@
 #include <unistd.h>
 #include <signal.h>
 
+/*
+程序功能描述：一个简单的TCP通信流程，包含了对退出信号的处理，并且分别使用四种IO接口进行数据的发送和接收处理
+四种IO接口分别为：
+read和write
+recv和send
+readv和writev
+recvmsg和sendmsg
+*/
+
 #define PORT 8888						/*侦听端口地址*/
 #define BACKLOG 2						/*侦听队列长度*/
 
-extern void sig_proccess(int signo);
-extern void sig_pipe(int signo);
+void sig_proccess(int signo);
+void sig_pipe(int signo);
+void process_conn_server(int s);
 
-
-/*
-程序功能描述：一个简单的TCP通信流程，包含了对退出信号的处理
-使用read 和 write调用进行socket通信
-*/
 int main(int argc, char *argv[])
 {
 	int ss,sc;		/*ss为服务器的socket描述符，sc为客户端的socket描述符*/
@@ -69,8 +74,8 @@ int main(int argc, char *argv[])
 		/*建立一个新的进程处理到来的连接*/
 		pid = fork();						/*分叉进程*/
 		if( pid == 0 ){						/*子进程中*/
-			process_conn_server(sc);		/*处理连接*/
 			close(ss);						/*在子进程中关闭服务器的侦听*/
+			process_conn_server(sc);		/*处理连接*/
 		}else{
 			close(sc);						/*在父进程中关闭客户端的连接*/
 		}

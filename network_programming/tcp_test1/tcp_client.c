@@ -8,14 +8,18 @@
 #include <signal.h>
 
 #define PORT 8888								/*侦听端口地址*/
-
-extern void sig_proccess(int signo);
-extern void sig_pipe(int signo);
+void sig_proccess(int signo);
+void sig_pipe(int signo);
+void process_conn_client(int s);
 
 int main(int argc, char *argv[])
 {
 	int s;										/*s为socket描述符*/
 	struct sockaddr_in server_addr;			/*服务器地址结构*/
+	/*if(argc == 1){
+		printf("PLS input server addr\n");
+		return 0;	
+	}*/
 
 	
 	signal(SIGINT, sig_proccess);				/*挂接SIGINT信号，处理函数为		  sig_process()*/
