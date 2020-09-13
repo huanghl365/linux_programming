@@ -1,9 +1,12 @@
-
 #include <stdio.h>
 #include <sys/uio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+
+/*
+程序功能描述：简答测试readv和writev系统调用
+*/
 int main(void){
 	int fd ;
 	int rsize,wsize; 
