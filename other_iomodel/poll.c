@@ -9,44 +9,6 @@
 #include <string.h>
 #include <poll.h>
 
-/*
-函数原型：int poll(struct pollfd *fds, nfds_t nfds, int timeout);
-描述：poll实现函数外部阻塞式，内部非阻塞式自动轮询多路阻塞式IO
-参数：
-fds：指定轮询的文件描述符以及事件，结构体定义如下
-------------
-struct pollfd {
-               int   fd;         
-               short events;     
-               short revents;     
-           };
-
-fd		：文件描述符
-events	：指定为文件描述符检查的事件的位掩码，举例如下：
-	POLLIN	输入事件
-	POLLOUT	输出事件
-	POLLERR	发生错误事件	
-revents	：poll返回时，设定该文件描述符上发生的事件的位掩码
-------------
-nfds：指定轮询文件描述符的数目，一般为轮询中的最大的文件描述符+1
-timeout：指定超时时间，单位为milliseconds 毫秒
--1 表示无限等待
-0  表示非阻塞
-返回值：
-返回发生的事件的文件描述符的数目，不同于select，即使一个描述符发生多个事件也只会计算一次。
--1 表示发生错误
-0  表示超时
-
-注意：
-poll就绪返回之后，再次poll时，无需对描述符的事件再次进行配置
-*/
-
-/*
-如何屏蔽文件描述符的事件？
-1、将events设置为0将忽略fd上发生的事件。
-2、将fd设定为负数，将导致events上的事件被忽略，revents返回0。
-*/
-
 
 /*
 函数功能描述：使用poll实现多路复用，检测鼠标和键盘输入

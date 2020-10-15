@@ -8,20 +8,6 @@
 #include <stdlib.h>
 
 /*
-int fcntl(int fd, F_SETOWN, pid);
-描述：获取及设置文件描述符flags
-参数:
-fd:文件描述符
-cmd: 
-F_SETOWN	设定文件描述符的属主，即文件描述符上可执行IO时会接收到通知信号的进程或进程组。
-arg:
-指定进程或进程组的pid。
-返回值：
-F_SETOWN	失败返回-1
-*/
-
-
-/*
 程序功能描述：测试信号驱动IO的使用
 */
 

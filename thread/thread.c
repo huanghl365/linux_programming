@@ -7,33 +7,6 @@
 #include <fcntl.h>
 #include <pthread.h>
 
-/*
-函数原型：int pthread_create(pthread_t *thread, const pthread_attr_t *attr, 
-	void *(*start_routine) (void *), void *arg);
-描述：pthread_create用来创建一个新线程
-参数：
-thread：输出型参数，指向线程标识符的地址，我们用该标识符来引用新线程
-attr：输入型参数，用来设置线程的属性，一般不需要设置，因此一般设置为NULL
-start_routine：这个函数指针指向 线程启动函数，线程从该函数开始执行
-arg：输入型参数，作为启动函数的函数参数，如果不需要传递则设置为NULL
-返回值：
-调用成功则返回0，失败返回错误代码
-
-函数原型：int pthread_join(pthread_t thread, void **retval);
-描述：pthread_join用来阻塞等待回收指定的线程,获取线程的终止状态
-参数：
-thread：线程标识符
-retval：输出型参数，指向线程的返回值(pthread_exit的参数)，一般设置为NULL
-返回值：
-调用成功则返回0，失败返回错误代码	
-
-函数原型：void pthread_exit(void *retval);
-描述：pthread_exit用来终止调用它的线程，并返回一个指向某个对象的指针
-
-参数：
-retval：输入性参数，用来指向线程的返回值，一般设置为NULL。决不能返回一个指向局部变量的指针，因为线程终止退出后，
-这个局部变量就不存在了，这样会引起程序漏洞。
-*/
 
 /*
 程序功能描述：测试创建一个线程(创建、传参、回收、获取线程返回值)

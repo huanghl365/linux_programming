@@ -10,26 +10,6 @@
 #define READ_SIZE 1024
 
 /*
-函数原型：int feof(FILE *stream);
-描述：判断文件流是不是到达文件结尾
-参数：
-stream：文件流指针
-返回值：
-如果到达文件尾，那么feof返回值为非零，否则返回值为0
-
-函数原型：int ferror(FILE *stream);
-描述：判断文件流是否发生错误 
-参数：
-stream：文件流指针
-返回值：有错误返回非零，否则返回0
-
-函数原型：void clearerr(FILE *stream);
-描述：用来清除文件流的文件尾标识和错误标识
-参数：文件流指针
-返回值：无
-*/
-
-/*
 程序功能描述：测试feof和ferror的使用
 */
 int main(void)

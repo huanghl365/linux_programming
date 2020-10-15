@@ -10,18 +10,6 @@
 #include <limits.h>
 
 /*
-函数原型：int mkfifo(const char *pathname, mode_t mode);
-描述：用来创建一个命名管道用于进程间通信。
-管道是单向的，因此使用open打开管道时，只能以O_RDONLY或者 O_WRONLY方式打开。
-
-参数：
-pathname: 指定命名管道的路径名
-mode:指定创建的命令管道文件的权限，创建的文件的权限为mode＆~umask，~mask不包括执行权限。
-返回值：
-创建成功返回0，创建失败返回-1.
-*/
-
-/*
 程序功能描述：观察分析open调用阻塞及非阻塞方式打开命名管道的现象
 */
 #define FIFO_NAME "./my_fifo"

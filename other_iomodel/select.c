@@ -9,39 +9,6 @@
 #include <string.h>
 
 /*
-函数原型：int select(int nfds, fd_set *readfds, fd_set *writefds,
-                  fd_set *exceptfds, struct timeval *timeout);
-描述：select实现外部阻塞，内部非阻塞自动轮询检测多路阻塞IO
-参数：
-nfds：指定轮询文件描述符的数目，一般为集合中最大的文件描述符+1
-readfds：检测输入是否就绪的文件描述符集合
-writefds：检测输出是否就绪的文件描述符集合
-exceptfds：检测异常是否发生的文件描述符集合
-timeout：指定超时时间
-当就绪时，timeout返回剩余时间
-直接设置timeout为NULL表示无限等待
-tv_sec和tv_usec为0表示不阻塞
-struct timeval {
-	long	tv_sec; 		// seconds 
-	long	tv_usec;		// microseconds 
-};
-返回值：
-错误返回-1
-超时返回0，并且清空集合
-返回正整数表示各个集合中就绪的文件描述符总数
-
-注意：
-当select就绪返回后，再次select时，需要重新初始化配置文件描述符集合。
-
-------------------
-void FD_ZERO(fd_set *set);			//清空
-void FD_SET(int fd, fd_set *set);	//添加
-void FD_CLR(int fd, fd_set *set);	//移除
-int  FD_ISSET(int fd, fd_set *set); //判断哪路IO就绪
-*/
-
-
-/*
 函数功能描述：使用select实现多路复用，检测鼠标和键盘输入
 */
 int main(void)

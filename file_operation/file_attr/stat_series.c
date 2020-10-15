@@ -8,65 +8,6 @@
 #include <string.h>
 
 /*
-函数原型：
-int stat(const char *pathname, struct stat *buf);
-int fstat(int fd, struct stat *buf);
-int lstat(const char *pathname, struct stat *buf);
-功能描述：
-用来查询的文件的各种信息，三者的区别如下：
-1、stat、lstat参数1是文件路径名，fstat参数1是文件描述符
-2、当对象是软连接时，stat、fstat判断的对象时软连接指向的对象，lstat判断的对象是软连接本身
-
-参数：
-pathname	文件的路径名
-fd			文件的描述符
-buf			输出参数，用来保存文件的查询信息
-struct stat {
-               dev_t     st_dev;         //ID of device containing file 
-               ino_t     st_ino;         //inode number 
-               mode_t    st_mode;        // protection 
-               nlink_t   st_nlink;       // number of hard links 
-               uid_t     st_uid;         // user ID of owner 
-               gid_t     st_gid;         // group ID of owner 
-               dev_t     st_rdev;        // device ID (if special file) 
-               off_t     st_size;        // total size, in bytes 
-               blksize_t st_blksize;     // blocksize for filesystem I/O 
-               blkcnt_t  st_blocks;      // number of 512B blocks allocated 
-	struct timespec st_atim;  // time of last access 
-	struct timespec st_mtim;  // time of last modification 
-	struct timespec st_ctim;  // time of last status change 
-
-#define st_atime st_atim.tv_sec 	 // Backward compatibility 
-#define st_mtime st_mtim.tv_sec
-#define st_ctime st_ctim.tv_sec
-}
-
-返回值：
-成功返回0 失败返回-1
-
----------------------
-一些判断宏定义：
-S_ISREG	用来判断文件是否为普通文件
-S_ISDIR	用来判断文件是否为目录
-S_ISLNK 用来判断文件是否为软连接
-
-
-一些判断掩码：
-S_IRUSR	属主是否具有读权限
-S_IWUSR
-S_IXUSR
-
-S_IRGRP 用户组是否具有读权限
-S_IWGRP
-S_IXGRP
-
-S_IROTH	其他用户是否具有读权限
-S_IWOTH
-S_IXOTH
-*/
-
-
-/*
 程序功能描述：分别使用stat、fstat、lstat调用获取文件属性，分析三者的区别
 
 测试结果：

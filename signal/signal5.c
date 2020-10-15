@@ -7,31 +7,6 @@
 typedef void (*sighandler_t)(int);
 
 /*
-函数原型：       typedef void (*sighandler_t)(int);
-       sighandler_t signal(int signum, sighandler_t handler);
-描述：signal用来处理shell和终端处理器产生的错误信号
-
-参数：
-signum：表示信号编号，当捕捉到信号时，会传递给捕捉函数，常见的信号如下：
-	SIGINT  终端中断，通过CTRL+C、kill -2 pid产生
-	SIGKILL 强制终止进程，这个信号不能捕捉和忽略，通过kill -9 pid产生
-	SIGHUP 	连接挂断，通过kill -HUP(1) pid产生
-	SIGTERM	正常终止进程，与SIGKILL不一样，这个信号可以捕捉和忽略，通过kill pid或者kill -15 pid产生
-
-	SIGALRM 超时警告信号，通过alarm调用产生
-	
-handler：指定信号的处理方式，有下面三种：
-	SIG_IGN 忽略信号
-	SIG_DFL 默认处理信号
-	
-	指定sighandler_t类型的函数用来捕捉处理信号
-	
-返回值：
-返回sighandler_t类型的函数指针，若发生错误返回SIG_ERR
-
-*/
-
-/*
 程序功能描述：测试signal执行处理函数时，接收到多个信号时的处理机制
 */
 void func(int sig);

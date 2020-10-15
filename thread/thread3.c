@@ -8,19 +8,6 @@
 #include <pthread.h>
 
 /*
-函数原型：int pthread_detach(pthread_t thread);
-描述：设置线程分离
-参数：
-thread：线程标识符
-返回值：
-调用成功则返回0，失败返回错误代码
-
-函数原型：pthread_t pthread_self(void);
-返回值：
-这个函数调用总是成功，返回调用线程的标识符
-*/
-
-/*
 程序功能描述：通过调用pthread_detach实现线程分离，然后测试创建1M个线程
 */
 

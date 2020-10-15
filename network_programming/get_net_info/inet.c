@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	/* 测试inet_ntoa，二进制地址（网络字节序）-> 点分十进制字符串
 	*/	
-	ip.s_addr = inet_addr(addr1); //网络字节序
+	ip.s_addr = inet_addr(addr1); //先把点分十进制转为网络字节序
 	if(err != -1){
 		printf("inet_addr:string %s value is:0x%x\n",addr1, ip.s_addr);
 	}else{

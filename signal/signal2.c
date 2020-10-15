@@ -5,24 +5,6 @@
 #include <sys/wait.h>
 
 /*
-函数原型：int pause(void);
-描述：
-让当前进程暂停运行，交出CPU给其他进程去执行。当前进程进入pause状态后当前进
-程会表现为“卡住、阻塞住”，要退出pause状态当前进程需要被信号唤醒。
-
-
-返回值：
-当信号发生并且信号处理函数执行完毕时，pause才会返回，并且返回-1，errno设置为EINTR
-*/
-
-/*
-函数原型：unsigned int alarm(unsigned int seconds);
-描述：用来在seconds之后发送一个SIGALRM信号
-返回值：
-重复调用alarm会重新设置时间并 返回上次alarm设置之后剩余的时间
-*/
-
-/*
 程序功能描述：使用alarm调用发送SIGALRM信号并捕捉处理
 */
 

@@ -7,19 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/*
-函数原型：off_t lseek(int fd, off_t offset, int whence);
-描述：以whence基准，将文件位置偏移offset（指针偏移量）个字节的位置
-参数：
-fd：文件描述符
-offset：偏移量，正数表示正向偏移，负数表示负向偏移
-whence：设定从文件的哪里开始偏移,可能取值为：SEEK_CUR、SEEK_END、SEEK_SET等
-SEEK_SET： 文件开头
-SEEK_CUR： 当前位置
-SEEK_END： 文件结尾
-返回值：
-返回结果偏移位置，以从文件开头开始的字节数为单位。 发生错误时，将返回值（off_t）-1，并设置errno
-*/
 
 /*
 程序功能描述：测试open使用不同方式打开对lseek使用的影响

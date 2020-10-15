@@ -7,39 +7,6 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <semaphore.h>
-/*
-函数原型：int pthread_mutex_init(pthread_mutex_t *restrict mutex,const pthread_mutexattr_t *restrict attr);
-描述：初始化互斥锁，初始化成功的互斥锁变量默认是解锁的
-参数：
-mutex：输出型参数，指向互斥锁变量的指针
-attr：输入型参数，用来设置互斥锁变量的属性，一般设定为NULL表示使用默认的参数
-返回值：
-调用成功返回0
-
-函数原型：int pthread_mutex_lock(pthread_mutex_t *mutex);
-描述：用来将互斥锁加锁，如果互斥锁已经在其他线程调用pthread_mutex_lock函数加锁，则这里就
-		会阻塞无法继续执行直到互斥锁已经处于解锁状态这里才能够加锁并继续执行程序
-参数：
-mutex：指向互斥锁变量的指针
-返回值：
-调用成功返回0
-
-
-函数原型：int pthread_mutex_unlock(pthread_mutex_t *mutex);
-描述：用来将互斥锁解锁，这样需要互斥锁的线程就才能够利用互斥锁进行加锁
-参数：
-mutex：指向互斥锁变量的指针
-返回值：
-调用成功返回0
-
-
-函数原型：int pthread_mutex_destroy(pthread_mutex_t *mutex);
-描述：用来销毁互斥锁，销毁前互斥锁必须先解锁，销毁后的互斥锁可以重新使用pthread_mutex_init初始化
-参数：
-mutex：指向互斥锁变量的指针
-返回值：
-调用成功返回0
-*/
 
 
 /*

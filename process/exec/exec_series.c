@@ -8,40 +8,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/wait.h>
-/*
-exec系列函数 用于执行新的程序作为新的进程替换老的进程，新的进程会继承老进程的进程号和资源。
-
-
-int execl(const char *path, const char *arg, ...(char  *) NULL );
-参数：
-path	可执行程序的路径名
-arg		任意字串都可以
-...		其余参数为可执行程序的传参，并且以NULL结束
-返回值：
-无
-
-int execv(const char *path, char *const argv[]);
-参数：
-path	可执行程序的路径名
-argv	参数指针数组（将execl的arg和传参存放到该指针数组）
-返回值：
-无
-
-
-int execlp(const char *file, const char *arg, ...(char  *) NULL);
-int execvp(const char *file, char *const argv[]);
-使用说明：
-跟execl和execv类似，区别是不需要指明程序路径，函数会去环境变量PATH中查找程序，
-因此使用execl和execv必须将要执行的程序的路径设置到PATH中，否则查找不到程序
-
-
-extern char **environ;
-int execle(const char *path, const char *arg, ..., (char *) NULL, char * const envp[] );
-使用说明：
-与前面的execl和execv类似，最后一个参数为环境变量，用来给执行程序中的main函数传递环境变量
-
-*/
-
 
 /*
 程序功能描述：测试exec一系列调用的使用

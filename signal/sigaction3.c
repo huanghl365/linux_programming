@@ -5,66 +5,6 @@
 #include <sys/wait.h>
 
 /*
-1、int sigemptyset(sigset_t *set);
-该函数的作用是将信号集初始化为空，成功时返回0，失败时返回-1。
-
-2、int sigfillset(sigset_t *set);
-该函数的作用是把信号集初始化包含所有已定义的信号，成功时返回0，失败时返回-1。
-
-3、int sigaddset(sigset_t *set, int signo);
-该函数的作用是把信号signo添加到信号集set中，成功时返回0，失败时返回-1。
-
-4、int sigdelset(sigset_t *set, int signo);
-该函数的作用是把信号signo从信号集set中删除，成功时返回0，失败时返回-1。
-
-5、int sigismember(sigset_t *set, int signo);
-该函数的作用是判断给定的信号signo是否是信号集中的一个成员，
-如果是返回1，如果不是，返回0，如果给定的信号无效，返回-1。
-
-6、int sigpromask(int how, const sigset_t *set, sigset_t *oset);
-功能描述：
-该函数可以根据参数how指定的方法修改进程的信号屏蔽字。
-新的信号屏蔽字由参数set（非空）指定，而原先的信号屏蔽字将保存在oset（非空）中。
-
-参数：
-how：指定信号屏蔽字的配置方法，取值如下：
-	SIG_BLOCK	将参数set中的信号添加到现有的信号屏蔽字中
-	SIG_SETMASK	把信号屏蔽字设置为set中的信号
-	SIG_UNBLOCK 从信号屏蔽字中删除参数set中的信号
-set：输入型参数，需要设置的信号屏蔽字集合
-oset：输出型参数，保存旧的信号屏蔽字集合
-
-如果set为空，则how没有意义，但此时调用该函数，如果oset不为空，则把当前信号屏蔽字保存到oset中。
-
-返回值：
-成功完成返回0，如果how取值无效返回-1，并设置errno为EINVAL。
-
-注意：
-调用这个函数才能改变进程的屏蔽字，之前的函数都是为改变一个变量的值而已，并不会真正影响进程的屏蔽字。
-
-7、int sigpending(sigset_t *set);
-功能描述：
-该函数的作用是将被阻塞的信号中停留在待处理状态的一组信号写到参数set指向的信号集中。
-参数：
-set：输出型参数，保存阻塞信号中处于待处理的一组信号
-返回值：
-成功调用返回0，否则返回-1，并设置errno表明错误原因。
-
-8、int sigsuspend(const sigset_t *sigmask);
-功能描述：
-该函数通过将进程的屏蔽字替换为由参数sigmask给出的信号集，然后挂起进程的执行。
-当产生信号时，sigsuspend调用会在信号处理函数执行完毕后返回。
-当进程被终止时，sigsuspend调用则不会返回。
-
-返回值：
-sigsuspend总是返回-1,并设置errno
-
-注意：如果一个信号被进程屏蔽时，它就不会传递给进程，但会停留在待处理状态，
-当进程解除对待处理信号的屏蔽时，待处理信号就会立刻被处理。
-*/
-
-
-/*
 程序功能描述：测试sigaction 信号屏蔽集相关系统调用
 */
 typedef void (*sighandler_t)(int);

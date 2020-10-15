@@ -8,40 +8,6 @@
 #include <pthread.h>
 
 /*
-函数原型：int pthread_cancel(pthread_t thread);
-描述：给指定线程发送取消请求，终止线程
-参数：
-thread：指定线程标识符
-返回值：
-调用成功则返回0，失败返回错误代码
-
-
-函数原型：int pthread_setcancelstate(int state, int *oldstate);
-描述：用来设置当前线程的取消状态，线程默认取消状态为PTHREAD_CANCEL_ENABLE
-参数：
-state：设置线程的取消状态
-	PTHREAD_CANCEL_ENABLE	表示允许接收取消请求
-	PTHREAD_CANCEL_DISABLE  表示忽略接收取消请求
-oldstate：输出型参数，保存原先的取消状态
-返回值：
-调用成功则返回0，失败返回错误代码
-
-
-函数原型：int pthread_setcanceltype(int type, int *oldtype);
-描述：用来设置线程的取消类型，调用前必须先调用pthread_setcancelstate设置好取消状态，线程默认取消类型为PTHREAD_CANCEL_DEFERRED
-参数：
-type：设置线程的取消类型
-	PTHREAD_CANCEL_ASYNCHRONOUS  表示接收到取消请求后立即采取行动终止线程
-	PTHREAD_CANCEL_DEFERRED		 表示接收到取消请求后，需要一直等待直到线程执行了以下函数
-	才采取行动(pthread_join\pthread_cont_wait\pthread_cont_timedwait\pthread_testcancel
-	\semwait\sigwait),其他阻塞函数也可能成为取消点，比如read、wait。
-oldtype：输出型参数，保存原先的取消类型
-返回值：
-调用成功则返回0，失败返回错误代码
-*/
-
-
-/*
 程序功能描述：测试取消一个线程
 */
 #if 1

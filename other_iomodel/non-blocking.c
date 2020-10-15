@@ -7,23 +7,6 @@
 #include <stdlib.h>
 
 /*
-int fcntl(int fd, F_GETFL);
-int fcntl(int fd, F_SETFL, ... arg);
-描述：获取及设置文件描述符flags
-参数:
-fd:文件描述符
-cmd: 
-F_GETFL	获取文件描述符flags，忽略参数arg
-F_SETFL	通过arg参数设置文件描述符flags
-arg:
-文件描述符的flags
-
-返回值：
-F_GETFL	返回文件描述符flags
-F_SETFL	失败返回-1
-*/
-
-/*
 函数功能描述：从键盘和鼠标以非阻塞方式读取数据
 */
 int main(void)
