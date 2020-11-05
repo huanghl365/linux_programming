@@ -95,7 +95,7 @@ int hostname_to_ip(const char* hostname)
 
 int main()
 {
-	hostname_to_ip("www.baidu.com");
+	hostname_to_ip("gateway.mj.sctel.com.cn");
 	
 	return 0;
 }
